@@ -1,6 +1,6 @@
 namespace Web.Tools;
 
-public class Output
+public class Output : IOutput
 {
     public Output(){}
 

@@ -2,22 +2,27 @@ using System.Diagnostics;
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Web.Models;
+using Web.Tools;
 
 namespace Web.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IOutput _output;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger,IOutput output)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
+        _output = output;
     }
 
     public IActionResult Index()
     {
+        _output.Print("AAAAAA INYECCION");
         return View();
     }
 

@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.OutputCaching;
+using Web.Tools;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
+builder.Services.AddTransient<IOutput,Output>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

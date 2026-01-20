@@ -4,6 +4,6 @@ public class Class1
 {
     public Class1()
     {
-        Infrastructure.Class1 c = new Infrastructure.Class1();
+        Infrastructure.Class2 c = new Infrastructure.Class2();
     }
 }

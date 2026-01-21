@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Xml;
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
+using Web.Tools;
 
 namespace Web.Controllers;
 
@@ -10,10 +12,12 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IOutput output1,IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
+        output1.Print("Uno");
+        output2.Print("Dos");
     }
 
     public IActionResult Index()
@@ -23,6 +27,7 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+        
         return View();
     }
 

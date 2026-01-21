@@ -1,7 +1,15 @@
+using System.Net;
+using System.Xml;
+using Web.Tools;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IOutput, Output>(); // <== nuevo cada que se usa
+// builder.Services.AddScoped<IOutput, Output>(); // <== duradero
+// builder.Services.AddSingleton<IOutput, Output>(); //<== cuidado
 
 var app = builder.Build();
 

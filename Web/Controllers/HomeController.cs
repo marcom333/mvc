@@ -11,11 +11,12 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, IOutput output)
+    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
-        output.Print("Hola Mundo!");
+        output1.Print("Hola Mundo 1!");
+        output2.Print("Hola Mundo 2!");
     }
 
     public IActionResult Index()

@@ -1,7 +1,6 @@
-
 namespace Web.Tools;
-
-    public interface IOutput
-    {
-        void print(string data);
-    }
+ 
+public interface IOutput
+{
+    public void Print(string msg);
+}

@@ -12,17 +12,20 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IOutput _output;
+    private readonly IOutput _output2;
 
-    public HomeController(ILogger<HomeController> logger,IOutput output)
+    public HomeController(ILogger<HomeController> logger,IOutput output,IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
         _output = output;
+        _output2 = output2;
     }
 
     public IActionResult Index()
     {
         _output.Print("AAAAAA INYECCION");
+        _output2.Print("AAAAAA INYECCION 2");
         return View();
     }
 

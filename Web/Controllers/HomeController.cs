@@ -1,6 +1,4 @@
 using System.Diagnostics;
-using Application;
-using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Web.Tools;
@@ -11,27 +9,26 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
-    {
+    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2){
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
-        output1.Print("Hola Mundo 1!");
-        output2.Print("Hola Mundo 2!");
+        output1.Print("Uno");
+        // uuid Uno
+        output2 = new Output();
+        output2.Print("Dos");
+        // uuid Dos
     }
 
-    public IActionResult Index()
-    {
+    public IActionResult Index(){
         return View();
     }
 
-    public IActionResult Privacy()
-    {
+    public IActionResult Privacy(){
         return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
+    public IActionResult Error(){
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

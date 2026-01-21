@@ -11,11 +11,16 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, Output output)
+    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
-        output.print("hello pako from the app");
+        output1.Print("UNO");
+        // UUID Uno
+       // output2.Print("DOS");
+       output2 = new Output();
+        output2.Print("DOS");
+        // UUID Dos
     }
 
     public IActionResult Index()

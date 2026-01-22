@@ -1,0 +1,65 @@
+﻿@model Application.Entities.Product;
+
+@{
+    ViewData["Title"] = "Nuevo Producto";
+}
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<form asp-controller="Product" asp-action="Store" method="POST">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <div class="col-12">
+            <label asp-for="Name" class="form-label">Nombre *:</label>
+            <input asp-for="Name" class="form-control form-control-sm" placeholder="Nombre del producto">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="col-12">
+            <label asp-for="Description" class="form-label">Descripción *:</label>
+            <input asp-for="Description" class="form-control form-control-sm" placeholder="Descripción del producto">
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="col-12">
+            <label asp-for="Price" class="form-label">Precio *:</label>
+            <input asp-for="Price" class="form-control form-control-sm" placeholder="Precio del producto">
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <div class="col-12">
+            <label asp-for="CategoryId" class="form-label">Categoría *:</label>
+            <select asp-for="CategoryId" class="form-select form-select-sm">
+                <option value="">Selecciona una Categoría</option>
+                <option value="1">Cat 1</option>
+                <option value="2">Cat 2</option>
+                <option value="3">Cat 3</option>
+                <option value="4">Cat 4</option>
+                <option value="5">Cat 5</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+
+</form>

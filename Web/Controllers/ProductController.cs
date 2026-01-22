@@ -9,7 +9,7 @@ namespace Web.Controllers;
 public class ProductController : Controller {
     
     // Index
-    public IActionResult Index() {
+    public IActionResult Index() {//jjj
         List<Product> products = [];
 
         if(TempData["error"] != null)

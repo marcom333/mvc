@@ -1,54 +1,27 @@
-﻿﻿@using Application.Entities
-@model List<Application.Entities.Product>;
+﻿@using Application.Entities
 
-@{
-    ViewData["Title"] = "Productos";
-}
+@model List<Product>
 
-@if (TempData["success"] != null)
+@if (ViewBag.Error != null)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["success"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-@if (TempData["error"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-danger" role="alert">
+        <strong>danger</strong> @ViewBag.Error
     </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Productos</h1>
-    <div class="col-12 mb-3">
-        <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Nuevo Producto</a>
-    </div>
-    <div class="col-12 mb-3">
-        <a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success">Editar Producto</a>
-    </div>
-    <br>
-    <p>Lista de Productos</p>
-    <ul class="list-group">
-        @foreach (var producto in Model)
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Product p in Model)
         {
-            <li class="list-group-item list-group-item-primary">@producto.Name</li>
+            <tr>
+                <td>@p.Name</td>
+            </tr>
         }
-        <ul />
-        <br>
-        <hr />
-        <br>
-        <p>Lista de Productos</p>
-        <table class="table table-primary">
-            <thead>
-                <tr><th>Name</th></tr>
-            </thead>
-            <tbody>
-                @foreach (Product producto in Model)
-                {
-                    <tr><td>@producto.Name</td></tr>
-                }
-            </tbody>
-        </table>
-</div>
+    </tbody>
+</table>

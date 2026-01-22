@@ -1,68 +1,135 @@
-﻿using Application.Entities;
+﻿
+
+using Application.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
+// Product/
 public class ProductController : Controller
 {
+
+    // Index
     public IActionResult Index()
     {
-        List<Product> productos = new List<Product>();
+        List<Product> products = [];
+
+        if (TempData["error"] != null)
+            ViewBag.Error = "No existen más productos de esa categoría";
+
         for (int i = 0; i < 10; i++)
         {
-            productos.Add(new()
+            products.Add(new()
             {
-                Name = $"Product #{i + 1}"
+                Name = "Product #" + i
             });
         }
-        return View(productos);
+        return View(products);
     }
 
-   
+    public IActionResult Detail(int id)
+    {
+        if (id == 50)
+        {
+            TempData["error"] = true;
+            return RedirectToAction("Index");
+        }
+
+        if (id == 100)
+            return NotFound();
+        if (id == 5)
+            ViewBag.Warning = "Casi se terminan!!";
+
+        return View(new Product()
+        {
+            Name = "Detail product " + id,
+            Description = "Test product",
+            Price = 1,
+            CategoryId = 1,
+            UserId = 1
+        });
+    }
+
     public IActionResult Create()
     {
         return View();
     }
-
     [HttpPost]
-    public IActionResult Store(Product product) 
+    public IActionResult Create(Product p)
     {
-        if (ModelState.IsValid)
-        {
-            // Aquí iría la lógica para guardar en base de datos
-            // _repository.Add(product);
-            // _repository.Save();
-            
-            return RedirectToAction("Index");
-        }
-        return View(product);
+        if (p.Name == "") return BadRequest();
+        if (p.Price == 0) return BadRequest();
+        if (p.CategoryId == 0) return BadRequest();
+        if (p.UserId == 0) return BadRequest();
+
+        return RedirectToAction("Detail", new { id = 1 });
     }
 
-    public IActionResult Edit(int id)
+    public IActionResult Update(int id)
     {
-        // Simulación de buscar producto por ID en BD
-        Product product = new Product
+        if (id == 100) return NotFound();
+        return View(new Product()
         {
-            Id = id,
-            Name = "Producto Demo",
-            Description = "Descripción demo",
-            Price = 99
-        };
-        
-        return View(product);
+            Name = "Detail product " + id,
+            Description = "Test product",
+            Price = 1,
+            CategoryId = 1,
+            UserId = 1
+        });
+    }
+    [HttpPost]
+    public IActionResult Update(int id, Product p)
+    {
+        if (id == 100) return NotFound();
+        if (p.Name == "") return BadRequest();
+        if (p.Price == 0) return BadRequest();
+        if (p.CategoryId == 0) return BadRequest();
+        if (p.UserId == 0) return BadRequest();
+
+        return RedirectToAction("Detail", new { id });
     }
 
-    [HttpPost]
-    public IActionResult Update(Product product)
+    public ViewResult ViewResult()
     {
-        if (ModelState.IsValid)
+        return View();
+    }
+
+    public JsonResult JsonResult()
+    {
+        return Json(new
         {
-            // Aquí iría la lógica para actualizar en base de datos
-            // _repository.Update(product);
-            // _repository.Save();
-            
-            return RedirectToAction("Index");
-        }
-        return View(product);
+            Name = "Hello",
+            Date = DateTime.Now
+        });
+    }
+
+    public RedirectResult RedirectResult()
+    {
+        return Redirect("http://www.google.com");
+    }
+
+    public RedirectToActionResult RedirectToActionResult()
+    {
+        return RedirectToAction("Index", "Home", new { Id = 1 });
+    }
+
+    public ContentResult ContentResult()
+    {
+        return Content("Hello world");
+    }
+
+    public NotFoundResult NotFoundResult()
+    {
+        return NotFound();
+    }
+
+    public OkObjectResult OkObjectResult()
+    {
+        return Ok(new { });
+    }
+
+    public BadRequestResult BadRequestResult()
+    {
+        return BadRequest();
     }
 }

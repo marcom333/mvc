@@ -1,14 +1,17 @@
-namespace Application.Entities
-{
-    public class Product
-    {
-       public int Id { get; set; }              // PK
-        public string Nombre { get; set; } = "";
-        public string? Descripcion { get; set; } 
-        public decimal Precio { get; set; }
+/* 
+    nombre
+    descripcion
+    precio
+    categoria_id
+    usuario_id
+*/
 
-        public int CategoryId { get; set; }     // FK
-        public int UsuarioId { get; set; }       // FK   
+namespace Application.Entities;
 
-    }
+public class Product {
+    public string Name {get; set;} = "";
+    public string? Description {get; set;}
+    public int Price {get; set;}
+    public int CategoryId {get; set;}
+    public int UserId {get; set;}
 }

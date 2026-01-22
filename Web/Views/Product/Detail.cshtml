@@ -2,27 +2,33 @@
 
 @model Product
 
+@if(ViewBag.Warning != null){
+    <div class="alert alert-warning" role="alert">
+        <strong>warning</strong> @ViewBag.Warning
+    </div>
+}
+
 <table>
     <tbody>
         <tr>
-            <th>Nombre </th>
-            <td>@Model.Nombre</td>
+            <th>Name</th>
+            <td>@Model.Name</td>
         </tr>
-         <tr>
-            <th>Descripcion </th>
-            <td>@Model.Descripcion</td>
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
         </tr>
-         <tr>
-            <th>Price </th>
-            <td>@Model.Precio</td>
+        <tr>
+            <th>Price</th>
+            <td>@Model.Price</td>
         </tr>
-         <tr>
+        <tr>
             <th>Category</th>
             <td>@Model.CategoryId</td>
         </tr>
-         <tr>
-            <th>Usuario</th>
-            <td>@Model.UsuarioId</td>
+        <tr>
+            <th>User</th>
+            <td>@Model.UserId</td>
         </tr>
     </tbody>
 </table>

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> MarcoM
 namespace Web.Tools;
 
 public class OutputFecha : IOutput {

@@ -18,35 +18,51 @@ public class ProductController : Controller
         return View(productos);
     }
 
-    [HttpGet]
+   
     public IActionResult Create()
     {
         return View();
     }
 
-   
-    [HttpGet("Product/Edit/{id:int}")]
-    public IActionResult Edit(int? id)
+    [HttpPost]
+    public IActionResult Store(Product product) 
     {
-        Console.WriteLine($"{DateTime.Now} | {Request.Method} | {Request.Path} | id={id}");
-
-        if (id == null)
+        if (ModelState.IsValid)
         {
-            TempData["error"] = "El producto no Existe";
-            return RedirectToAction(nameof(Index));
+            // Aquí iría la lógica para guardar en base de datos
+            // _repository.Add(product);
+            // _repository.Save();
+            
+            return RedirectToAction("Index");
         }
-
-        //Busqueda de producto
-        Product producto = new Product()
-        {
-            Name = "PC",
-            Description = "Torre",
-            Price = 10,
-            CategoryId = 5,
-            UserId = 10
-        };
-
-        return View(producto);
+        return View(product);
     }
 
+    public IActionResult Edit(int id)
+    {
+        // Simulación de buscar producto por ID en BD
+        Product product = new Product
+        {
+            Id = id,
+            Name = "Producto Demo",
+            Description = "Descripción demo",
+            Price = 99
+        };
+        
+        return View(product);
+    }
+
+    [HttpPost]
+    public IActionResult Update(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            // Aquí iría la lógica para actualizar en base de datos
+            // _repository.Update(product);
+            // _repository.Save();
+            
+            return RedirectToAction("Index");
+        }
+        return View(product);
+    }
 }

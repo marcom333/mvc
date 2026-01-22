@@ -1,0 +1,33 @@
+@using Application.Entities
+@model Product
+
+@if(ViewBag.Error != null){
+    <div class="alert alert-warning" role="alert">
+        Este producto está a punto de agotar existencias.
+    </div>
+}
+
+<table>
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <td>@Model.Name </td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>@Model.Price</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>@Model.CategoryId</td>
+        </tr>
+        <tr>
+            <th>User</th>
+            <td>@Model.UserId</td>
+        </tr>
+    </tbody>
+</table>

@@ -11,11 +11,16 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger, IOutput output)
+    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
-        output.Print("Hello from the app");
+        //Ejemplo para visualizar los objetos nuevos con Transient
+        output1.Print("Uno");
+        //uuid Uno
+        output2 = new Output();
+        output2.Print("Dos");
+        //uuid Dos
     }
 
     public IActionResult Index()

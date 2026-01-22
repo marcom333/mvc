@@ -1,0 +1,25 @@
+@using Application.Entities
+
+@model List<Product>
+
+@if(ViewBag.Error!=null){
+    <div class="alert alert-danger" role="alert">
+        <strong>danger</strong> @ViewBag.Error
+    </div>
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Product p in Model){
+            <tr>
+                <td>@p.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -37,16 +37,47 @@ public class ProductController : Controller
         
     // }
 
-    public IActionResult Update()
+    [HttpGet]
+    public IActionResult Update(int id)
     {
-        return View();
+        return View(new Product()
+        {
+            Name = "Product " + id,
+            Description = "Test Product",
+            Price = 1,
+            CategoryId = id,
+            UserId = 1
+        });
     }
 
-    // [HttpPost]
-    // public IActionResult Update()
-    // {
+    [HttpPost]
+    public IActionResult Update(Product model)
+    {
+        List <Product> products = [];
         
-    // }
+        for(int i=0; i<10; i++)
+        {
+            if(model.CategoryId == i)
+                {
+                    products.Add(new()
+                    {
+                        Name = "Product # "+i,
+                            CategoryId = i
+                    });
+                } 
+                else
+                {
+                    products.Add(new()
+                    {
+                        Name = model.Name,
+                        Description = model.Description,
+                        Price = model.Price,
+                    });
+                }
+            
+        }
+        return RedirectToAction("Index", products);
+    }
 
     public IActionResult Detail(int id)
     {
@@ -66,7 +97,7 @@ public class ProductController : Controller
 
         return View(new Product()
         {
-            Name = "Detail Product " + id,
+            Name = "Product " + id,
             Description = "Test Product",
             Price = 1,
             CategoryId = 1,

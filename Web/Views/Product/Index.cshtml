@@ -1,0 +1,19 @@
+@using Application.Entities
+
+@model List<Product>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Product p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

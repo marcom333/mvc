@@ -3,6 +3,8 @@ using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
+using Web.Tools;
+using Web.Tools.Interfaces;
 
 namespace Web.Controllers;
 
@@ -10,10 +12,12 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
+        output1.Print("uno");
+        output2.Print("dos");
     }
 
     public IActionResult Index()

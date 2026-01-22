@@ -16,7 +16,7 @@ public class HomeController : Controller
         // uuid Uno
         output2 = new Output();
         output2.Print("Dos");
-        // uuid Two
+        // uuid Dos
     }
 
     public IActionResult Index(){

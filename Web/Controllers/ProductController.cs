@@ -29,6 +29,7 @@ public class ProductController : Controller
 
     public IActionResult Detail(int id)
     {
+        ViewBag.status = TempData["status"] ?? 0;
         if (id == 50)
         {
             TempData["error"] = true;
@@ -50,6 +51,7 @@ public class ProductController : Controller
         });
     }
 
+    [HttpGet]
     public IActionResult Create()
     {
         return View();
@@ -61,6 +63,7 @@ public class ProductController : Controller
         if (p.Price == 0) return BadRequest();
         if (p.CategoryId == 0) return BadRequest();
         if (p.UserId == 0) return BadRequest();
+        TempData["status"] = 200;
 
         return RedirectToAction("Detail", new { id = 1 });
     }

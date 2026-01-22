@@ -5,22 +5,26 @@ namespace Web.Controllers;
 public class ProductController : Controller
 {
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(List<Product>? products)
     {
-        List <Product> products = [];
+        if(products == null)
+        {
+            for(int i=0; i<10; i++)
+            {
+                products =
+                [
+                    new()
+                    {
+                        Name = "Product # "+i,
+                        CategoryId = i
+                    },
+                ];
+            }
+        }
 
         if(TempData["error"] != null)
         {
             ViewBag.error = "No existen más productos de esa categoría.";
-        }
-
-        for(int i=0; i<10; i++)
-        {
-            products.Add(new()
-            {
-                Name = "Product # "+i,
-                CategoryId = i
-            });
         }
 
         return View(products);

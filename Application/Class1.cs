@@ -4,6 +4,7 @@ public class Class1
 {
     public Class1()
     {
-        Infrastructure.Class2 c = new Infrastructure.Class2();
+        // Marco estuvo aquí Y Karla was here
+
     }
 }

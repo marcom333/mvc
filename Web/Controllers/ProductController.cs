@@ -40,8 +40,6 @@ public class ProductController : Controller
     [HttpGet("Product/Edit/{id:int}")]
     public IActionResult Edit(int? id)
     {    
-        Console.WriteLine($"{DateTime.Now:HH:mm:ss.fff} | {Request.Method} | {Request.Path} | id={id}");
-
         if (id == null)
         {
             TempData["error"] = "El producto no fue encontrado!";
@@ -69,8 +67,6 @@ public class ProductController : Controller
             TempData["error"] = "El producto no fue actualizado!";
             return View("Edit", product);
         }
-
-        Console.WriteLine($"product id: {product.Id}");
 
         TempData["success"] = "El producto fue actualizado Exitosamente!";
         return RedirectToAction(nameof(Index));

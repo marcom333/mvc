@@ -4,7 +4,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IOutput, Output>();
+//builder.Services.AddTransient<IOutput, Output>();
+//builder.Services.AddScoped<IOutput, Output>();
+builder.Services.AddScoped<IOutput, OutputFecha>();
+//builder.Services.AddSingleton<IOutput, Output>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -11,17 +11,18 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IOutput _output;
-    public HomeController(ILogger<HomeController> logger, IOutput output)
+    public HomeController(ILogger<HomeController> logger, IOutput output1,IOutput output2)
     {
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
-        _output= output;
-        output.Print("hello"); 
+        output1.Print("uno");
+        output2.Print("dos");
+        
     }
 
     public IActionResult Index()
     {
-         _output.Print("Hola desde HomeController de Karla Heras");
+        
         return View();
     }
 

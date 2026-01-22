@@ -1,0 +1,28 @@
+@using Application.Entities
+
+@model Product
+
+<table>
+    <tbody>
+        <tr>
+            <th>Nombre </th>
+            <td>@Model.Nombre</td>
+        </tr>
+         <tr>
+            <th>Descripcion </th>
+            <td>@Model.Descripcion</td>
+        </tr>
+         <tr>
+            <th>Price </th>
+            <td>@Model.Precio</td>
+        </tr>
+         <tr>
+            <th>Category</th>
+            <td>@Model.CategoryId</td>
+        </tr>
+         <tr>
+            <th>Usuario</th>
+            <td>@Model.UsuarioId</td>
+        </tr>
+    </tbody>
+</table>

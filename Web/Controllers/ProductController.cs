@@ -24,6 +24,7 @@ public class ProductController : Controller {
     }
 
     public IActionResult Detail(int id) {
+        ViewBag.status= TempData["status"];
         if(id == 50) {
             TempData["error"] = true;
             return RedirectToAction("Index");
@@ -43,8 +44,8 @@ public class ProductController : Controller {
         });
     }
 
-    public IActionResult Create() {
-        return View();
+    public IActionResult Create() {//get por defecto, [httpGet] si falla
+        return View(); //Product/Create.cshtml
     }
     [HttpPost]
     public IActionResult Create(Product p) {
@@ -52,6 +53,7 @@ public class ProductController : Controller {
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
+        TempData["status"]= 200;
 
         return RedirectToAction("Detail", new {id=1});
     }
@@ -76,29 +78,6 @@ public class ProductController : Controller {
 
         return RedirectToAction("Detail", new {id});
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public ViewResult ViewResult() {

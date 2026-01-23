@@ -5,20 +5,26 @@ namespace Web.Controllers;
 public class ProductController : Controller
 {
     [HttpGet]
-    public IActionResult Index(List<Product>? products)
+    public IActionResult Index(List<Product> products)
     {
-        if(products == null)
+        products.ForEach(x =>
         {
-            for(int i=0; i<10; i++)
+            Console.WriteLine("Nombre: " + x.Name + " Descripción: " + x.Description + " Precio: " + x.Price + " ID Categoría: " + x.CategoryId + " ID Usuario: " + x.UserId);
+        });
+        Console.WriteLine("===========================================================================================================================================================");
+        Console.WriteLine("===========================================================================================================================================================");
+
+        products ??= new List<Product>();
+
+        if (products.Count == 0)
+        {
+            for (int i = 0; i < 10; i++)
             {
-                products =
-                [
-                    new()
-                    {
-                        Name = "Product # "+i,
-                        CategoryId = i
-                    },
-                ];
+                products.Add(new Product
+                {
+                    Name = "Product # " + i,
+                    CategoryId = i
+                });
             }
         }
 
@@ -34,12 +40,6 @@ public class ProductController : Controller
     {
         return View();
     }
-
-    [HttpPost]
-    // public IActionResult Create()
-    // {
-        
-    // }
 
     [HttpGet]
     public IActionResult Update(int id)
@@ -58,29 +58,39 @@ public class ProductController : Controller
     public IActionResult Update(Product model)
     {
         List <Product> products = [];
-        
+
         for(int i=0; i<10; i++)
         {
-            if(model.CategoryId == i)
+            if(i == model.CategoryId)
+            {
+                products.Add(new()
                 {
-                    products.Add(new()
-                    {
-                        Name = "Product # "+i,
-                            CategoryId = i
-                    });
-                } 
-                else
+                    Name = model.Name,
+                    Description = model.Description,
+                    Price = model.Price,
+                    CategoryId = i
+                });
+            } 
+            else
+            {
+                products.Add(new()
                 {
-                    products.Add(new()
-                    {
-                        Name = model.Name,
-                        Description = model.Description,
-                        Price = model.Price,
-                    });
-                }
-            
+                    Name = "Product # " + i,
+                    Description = "Test Product",
+                    Price = 1,
+                    CategoryId = i,
+                    UserId = 1
+                });
+            }
         }
-        return RedirectToAction("Index", products);
+        products.ForEach(x =>
+        {
+            Console.WriteLine("Nombre: " + x.Name + " Descripción: " + x.Description + " Precio: " + x.Price + " ID Categoría: " + x.CategoryId + " ID Usuario: " + x.UserId);
+        });
+        Console.WriteLine("===========================================================================================================================================================");
+        Console.WriteLine("===========================================================================================================================================================");
+        TempData["saved_changes"] = "Los cambios han sido guardados.";
+        return RedirectToAction("Index");
     }
 
     public IActionResult Detail(int id)

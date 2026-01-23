@@ -6,7 +6,9 @@
 <div class="card">
     <div class="card-body">
         <div>
-            <form asp-action="Update" method="post">
+            <form asp-controller="Product" asp-action="Update" method="post">
+                <input asp-for="@Model.CategoryId" type="hidden" value="@Model.CategoryId">
+                <input asp-for="@Model.UserId" type="hidden" value="@Model.UserId">
                 <div class="mb-3">
                     <label asp-for="@Model.Name" class="form-label fw-bold"></label>
                     <input asp-for="@Model.Name" type="text" class="form-control" placeholder="Product name" value="@Model.Name">
@@ -26,5 +28,4 @@
             </form>
         </div>
     </div>
-
 </div>

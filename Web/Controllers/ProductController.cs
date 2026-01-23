@@ -146,18 +146,10 @@ public class ProductController : Controller {
     }
 
     public OkObjectResult OkObjectResult() {
-<<<<<<< HEAD
-        return Ok(new {});
-    }
-
-    public BadRequestResult BadRequestResult() {
-        return BadRequest();
-=======
         return Ok(new {}); // 200
     }
 
     public BadRequestResult BadRequestResult() {
         return BadRequest(); //400
->>>>>>> b2ca0ee01653326a14ab742385c1abfdf336faba
     }
 }

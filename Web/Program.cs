@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+using Application.Interface.Service;
+using Application.Services;
+>>>>>>> b2ca0ee01653326a14ab742385c1abfdf336faba
 using Web.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +14,11 @@ builder.Services.AddControllersWithViews();
 // builder.Services.AddScoped<IOutput, Output>(); // <== duradero
 builder.Services.AddSingleton<IOutput, OutputFecha>(); //<== cuidado
 
+<<<<<<< HEAD
+=======
+builder.Services.AddSingleton<IProductService, ProductService>();
+
+>>>>>>> b2ca0ee01653326a14ab742385c1abfdf336faba
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,14 +1,16 @@
 @using Application.Entities
+@using Web.ViewModel
 
-@model Product
+@model ProductDetailViewModel
 
 <h1>Detalles del producto</h1>
 
 <p>
-    <a class="btn btn-warning" asp-action="Update" asp-route-id="1">Editar</a>
-    @Html.ActionLink("Registrar", "Create", null, new { @class = "btn btn-success" })
-    <br>
-    @Html.ActionLink("Volver al listado", "Index" ,"Home", new { @class = "btn btn-primary", style="margin-top:10px;"})
+    <a href="/Product/Update/1" class="btn btn-success">Editar</a> <br>
+    <a class="btn btn-warning" asp-action="Update" asp-route-id="1">Editar</a> <br>
+    @Html.ActionLink("Registrar", "Create")<br>
+    @Html.ActionLink("Home", "Index", "Home")<br>
+    @Html.ActionLink("Editar", "Update", new {q=1}, new {@class="btn btn-success", style="text-align: center"})
 </p>
 
 @if(ViewBag.Warning != null){
@@ -22,7 +24,7 @@
     </div>
 }
 
-@if(Model.Name == "test"){
+@if(Model.Product.Name == "test"){
 <div class="alert alert-danger" role="alert">
     <strong>danger</strong> test activado
 </div>
@@ -33,26 +35,32 @@ else{
         <tr>
             <th>Name</th>
             <td>
-                @Model.Name <br>
-                @Html.Raw(Model.Name) <br>
-                @Html.Encode(Model.Name)
+                @Model.Product.Name <br>
+                @Html.Raw(Model.Product.Name) <br>
+                @Html.Encode(Model.Product.Name)
             </td>
         </tr>
         <tr>
             <th>Description</th>
-            <td>@Model.Description</td>
+            <td>@Model.Product.Description</td>
         </tr>
         <tr>
             <th>Price</th>
-            <td>@Model.Price</td>
+            <td>@Model.Product.Price</td>
         </tr>
         <tr>
             <th>Category</th>
-            <td>@Model.CategoryId</td>
+            <td>@Model.Category.Name</td>
         </tr>
         <tr>
             <th>User</th>
-            <td>@Model.UserId</td>
+            <td>@Model.User.Name</td>
+        </tr>
+        <tr>
+            <th>Photo</th>
+            <td>
+                <img src="@Url.Content("~/img/car4.webp")" alt="">
+            </td>
         </tr>
         <tr>
             <th>Photo</th>

@@ -1,30 +1,30 @@
 
 
 using Application.Entities;
+using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.ViewModel;
 
 namespace Web.Controllers;
 
 // Product/
 [Route("Product")]
 public class ProductController : Controller {
+
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService) {
+        _productService = productService;
+    }
     
     // Index
     [HttpGet("Index")]
     public IActionResult Index() {
-        List<Product> products = [];
-
         if(TempData["error"] != null)
             ViewBag.Error = "No existen más productos de esa categoría";
-
-        for(int i = 0; i<10; i++) {
-            products.Add(new() {
-               Name = "Product #"+i,
-               Price = i+1
-            });
-        }
-        return View(products);
+        return View(_productService.GetProducts());
     }
+    
     [HttpGet("Detail/{id}")]
     public IActionResult Detail(int id) {
         ViewBag.status = TempData["status"];
@@ -38,13 +38,23 @@ public class ProductController : Controller {
         if(id == 5)
             ViewBag.Warning = "Casi se terminan!!";
 
-        return View(new Product() {
+        ProductDetailViewModel detail = new();
+        detail.Product = new Product() {
             Name = "<h1>Detail product "+id +"</h1>",
             Description = "Test product",
             Price = 1,
             CategoryId = 1,
             UserId = 1
-        });
+        };
+        detail.Category = new Category() {
+            Name = "Verduras",
+            CategoryId = 1
+        };
+        detail.User = new User() {
+            Name = "Juan",
+            UserId = 1
+        };
+        return View(detail);
     }
     [HttpGet("Create")]
     public IActionResult Create() { // get por defecto, [HttpGet] si falla

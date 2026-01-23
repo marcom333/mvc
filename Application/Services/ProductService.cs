@@ -38,23 +38,37 @@ public class ProductService : IProductService
         };    
     }
 
-    public Product CreateProduct(Product product)
-    {
-        throw new NotImplementedException();
-    }
-
     public Product GetProduct(int id)
     {
-        throw new NotImplementedException();
+        //dapper where id = id
+        Product product = new Product()
+        {
+            Name = "KeyBoard",
+            Description = "Redragon Keyboard",
+            Price = 250,
+            CategoryId = 1, 
+            UserId = 1
+        };
+
+        return product;
     }
 
     public List<Product> GetProducts()
     {
         return this.Products;
     }
+    
+    public bool CreateProduct(Product product)
+    {
+        //dapper Saving
+        Product newProduct = product;
+        return newProduct != null;
+    }
 
     public bool UpdateProduct(Product product)
     {
-        throw new NotImplementedException();
+        //dapper Updating
+        Product Product = product;
+        return Product != null;
     }
 }

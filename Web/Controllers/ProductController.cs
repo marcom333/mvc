@@ -37,8 +37,16 @@ public class ProductController : Controller
             return View("Create", product);
         }
 
-        TempData["success"] = "El producto fue almacenado Exitosamente!";
-        return RedirectToAction(nameof(Index));
+        if (_productService.CreateProduct(product))
+        {
+            TempData["success"] = "El producto fue almacenado Exitosamente!";
+            return RedirectToAction(nameof(Index));
+        }
+        else
+        {            
+            TempData["error"] = "Ocurrio un error. El producto no fue almacenado!";
+            return RedirectToAction(nameof(Index));
+        }
     }
     
     [HttpGet]
@@ -73,26 +81,16 @@ public class ProductController : Controller
     }
 
     [HttpGet("Product/Edit/{id:int}")]
-    public IActionResult Edit(int? id)
+    public IActionResult Edit(int id)
     {    
         ViewData["nav"] = "product";
-        if (id == null)
+        if (id is 0)
         {
             TempData["error"] = "El producto no fue encontrado!";
             return RedirectToAction(nameof(Index));
         }
 
-        //Busqueda de producto
-        Product producto = new Product()
-        {
-            Name = "Lata de Verduras",
-            Description = "Asi es, es una lata de verduras",
-            Price = 10,
-            CategoryId = 5, 
-            UserId = 10
-        };
-
-        return View(producto);        
+        return View(_productService.GetProduct(id));        
     }
 
     [HttpPost]
@@ -104,8 +102,16 @@ public class ProductController : Controller
             TempData["error"] = "El producto no fue actualizado!";
             return View("Edit", product);
         }
-
-        TempData["success"] = "El producto fue actualizado Exitosamente!";
-        return RedirectToAction(nameof(Index));
+        
+        if (_productService.UpdateProduct(product))
+        {
+            TempData["success"] = "El producto fue actualizado Exitosamente!";
+            return RedirectToAction(nameof(Index));
+        }
+        else
+        {            
+            TempData["error"] = "Ocurrio un error. El producto no fue actualizado!";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

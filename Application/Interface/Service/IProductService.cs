@@ -8,7 +8,7 @@ public interface IProductService
 
     public List<Product> GetProducts();
 
-    public Product CreateProduct(Product product);
+    public bool CreateProduct(Product product);
 
     public bool UpdateProduct(Product product);
 }

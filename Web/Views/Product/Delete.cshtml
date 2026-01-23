@@ -1,0 +1,30 @@
+@using Application.Entities
+@using Microsoft.AspNetCore.Components.Forms
+@model List<Product>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+        </tr>
+        
+    </thead>
+    <tbody>
+@foreach(Product product in @Model)
+{
+    
+    <form method="POST" asp-controller = "Product">
+        @Html.AntiForgeryToken()
+    <tr>
+        
+        <input hidden name = "id_producto" />
+        <td>@product.Name</td>
+
+        <td><button asp-action  = "Update">Update</button></td>
+        <td><button asp-action = "Delete">Delete</button></td>
+    </tr>
+    </form>
+}
+
+</tbody>
+</table>

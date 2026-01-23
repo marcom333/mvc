@@ -28,6 +28,7 @@ public class ProductController : Controller
 
     public IActionResult Detail(int id)
     {
+        ViewBag.status = TempData["status"] ?? 0;
         if(id == 50){
             TempData["error"] = true;
             return RedirectToAction("Index");
@@ -49,6 +50,45 @@ public class ProductController : Controller
             UserId = 1
         });
         
+    }
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+    [HttpPost]
+    public IActionResult Create(Product p)
+    {
+        if(p.Name == "") return BadRequest();
+        if(p.Price == 0) return BadRequest();
+        if(p.CategoryId == 0) return BadRequest();
+        if(p.UserId == 0) return BadRequest();
+
+        return RedirectToAction("Detail", new{id=1});
+    }
+
+    [HttpGet]
+    public IActionResult Update(int id){
+        if(id == 100) return NotFound();
+        return View(new Product()
+        {
+            Name = "Detalle Producto "+ id,
+            Description = "Test Product",
+            Price = 1,
+            CategoryId = 1,
+            UserId = 1
+        });
+    }
+    [HttpPost]
+    public IActionResult Update(int id,Product p)
+    {
+        if(id == 100) return NotFound();
+        if(p.Name == "") return BadRequest();
+        if(p.Price == 0) return BadRequest();
+        if(p.CategoryId == 0) return BadRequest();
+        if(p.UserId == 0) return BadRequest();
+
+        return RedirectToAction("Index", "Home", new{id, name="hola", registrado=true});
     }
 
     public ViewResult ViewResult()
@@ -77,7 +117,7 @@ public class ProductController : Controller
 
     public ContentResult ContentResult()
     {
-        return Content("Hello Word");
+        return Content("Correcto");
     }
 
     public NotFoundResult NotFoundResult()

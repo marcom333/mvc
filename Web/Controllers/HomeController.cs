@@ -31,6 +31,19 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Test(int? id)
+    {
+        Console.WriteLine(id==null);
+        return Ok();
+    }
+
+    public IActionResult Test2(int id)
+    {
+        Console.Write(id==0);
+        return Ok();
+
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

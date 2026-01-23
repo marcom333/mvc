@@ -2,6 +2,12 @@
 
 @model List<Product>
 
+<style>
+    body{
+        text-align: center;
+    }
+</style>
+
 @if(ViewBag.Error!=null){
     <div class="alert alert-danger" role="alert">
         <strong>danger</strong> @ViewBag.Error
@@ -11,7 +17,7 @@
 <table>
     <thead>
         <tr>
-            <th>Name</th>
+            <h1>Lista de productos</h1>
         </tr>
     </thead>
     <tbody>

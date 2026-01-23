@@ -2,6 +2,17 @@
 
 @model Product
 
+@if(ViewBag.Warning != null){
+    <div class="alert alert-warning" role="alert">
+        <strong>warning</strong> @ViewBag.Warning
+    </div>
+}
+@if(ViewBag.status != null){
+    <div class="alert alert-success">
+        <b>Exito!</b> Se a registrado con exito.
+    </div>
+}
+
 <table>
     <tbody>
         <tr>

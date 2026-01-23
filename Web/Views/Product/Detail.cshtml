@@ -6,6 +6,9 @@
 
 <p>
     <a class="btn btn-warning" asp-action="Update" asp-route-id="1">Editar</a>
+    @Html.ActionLink("Registrar", "Create", null, new { @class = "btn btn-success" })
+    <br>
+    @Html.ActionLink("Volver al listado", "Index" ,"Home", new { @class = "btn btn-primary", style="margin-top:10px;"})
 </p>
 
 @if(ViewBag.Warning != null){
@@ -29,7 +32,11 @@ else{
     <tbody>
         <tr>
             <th>Name</th>
-            <td>@Model.Name</td>
+            <td>
+                @Model.Name <br>
+                @Html.Raw(Model.Name) <br>
+                @Html.Encode(Model.Name)
+            </td>
         </tr>
         <tr>
             <th>Description</th>
@@ -46,6 +53,12 @@ else{
         <tr>
             <th>User</th>
             <td>@Model.UserId</td>
+        </tr>
+        <tr>
+            <th>Photo</th>
+            <td>
+                
+            </td>
         </tr>
     </tbody>
 </table>

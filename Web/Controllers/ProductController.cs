@@ -48,7 +48,7 @@ public class ProductController : Controller {
     }
     [HttpGet("Create")]
     public IActionResult Create() { // get por defecto, [HttpGet] si falla
-        return View();
+        return View(new Product());
     }
     [HttpPost("Create")]
     public IActionResult Create(Product p) {

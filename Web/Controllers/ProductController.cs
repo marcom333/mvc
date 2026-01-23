@@ -26,11 +26,7 @@ public class ProductController : Controller {
     }
     [HttpGet("Detail/{id}")]
     public IActionResult Detail(int id) {
-<<<<<<< HEAD
-        ViewBag.status= TempData["status"];
-=======
         ViewBag.status = TempData["status"];
->>>>>>> origin/MarcoM
         if(id == 50) {
             TempData["error"] = true;
             return RedirectToAction("Index");

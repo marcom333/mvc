@@ -21,6 +21,8 @@
 
 <div class="card">
     <div class="card-body">
+        <h3>Registro de Producto</h3>
+        <hr>
         <form asp-controller="Product" asp-action="Store" method="POST">    
             @Html.AntiForgeryToken()
 
@@ -59,7 +61,7 @@
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
             </div>
-
+            <hr>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>

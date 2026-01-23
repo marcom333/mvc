@@ -22,6 +22,15 @@ html {
 
 body {
   margin-bottom: 60px;
+  /* background: 
+    linear-gradient(
+        rgba(255,255,255,0.75),
+        rgba(255,255,255,0.75)
+    ),
+    url("/img/faces2.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat; */
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {

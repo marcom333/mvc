@@ -1,0 +1,40 @@
+﻿@using Application.Entities
+
+@model Product
+
+@if(ViewBag.Warning != null)
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>warning</strong>@ViewBag.warning
+    </div>
+}
+
+@if(ViewBag.status != null)
+{
+    <div class="alert alert-success" role="alert">
+        <b>Success</b> Se ha registrado con exito
+    </div>
+}
+)
+)
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>User</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Name</td>
+            <td>@Model.Description</td>
+            <td>@Model.Price.ToString("C")</td>
+            <td>@Model.CategoryId</td>
+            <td>@Model.UserId</td>
+        </tr>
+    </tbody>
+</table>

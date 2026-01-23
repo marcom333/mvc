@@ -1,3 +1,10 @@
+@{
+    if(ViewBag.user != null){
+        Layout = "~/Views/Shared/_Plantilla.cshtml";
+    }
+    ViewData["Title"] = "Productos";
+}
+
 @using Application.Entities
 @model List<Product>
 
@@ -11,29 +18,33 @@
     Add New Product
 </a>
 <hr>
-<div class="table-responsive">
-    <table class="table table-striped w-auto">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(Product p in Model){
-                <tr>
-                    <td>
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.CategoryId">@p.Name</a>
-                    </td>
-                    <td>
-                        <a asp-controller="Product" asp-action="Update" asp-route-id="@p.CategoryId" class="btn btn-primary">Edit</a>
-                    </td>
-                    <td>
-                        <a class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="card">
+    <div class="card-body bg-dark-subtle">
+        <div class="table-responsive">
+            <table class="table table-striped table-success w-auto">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(Product p in Model){
+                        <tr>
+                            <td>
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.CategoryId" class="text-dark">@p.Name</a>
+                            </td>
+                            <td>
+                                <a asp-controller="Product" asp-action="Update" asp-route-id="@p.CategoryId" class="btn btn-primary">Edit</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

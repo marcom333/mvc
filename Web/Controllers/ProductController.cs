@@ -19,7 +19,8 @@ public class ProductController : Controller {
 
         for(int i = 0; i<10; i++) {
             products.Add(new() {
-               Name = "Product #"+i 
+               Name = "Product #"+i,
+               Price = i+1
             });
         }
         return View(products);

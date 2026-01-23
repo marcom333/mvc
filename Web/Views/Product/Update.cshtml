@@ -3,25 +3,7 @@
 
 
 <form action="" method="post">
-    <div class="form-group">
-        <label for="">Nombre</label>
-        <input type="text" class="form-control" name="Name" id="" aria-describedby="helpId" placeholder="" value="@Model.Name">
-        <small id="helpId" class="form-text text-muted">Help text</small>
-    </div>
-
-    <div class="form-group">
-        <label for="">Precio</label>
-        <input type="number" class="form-control" name="Price" id="" aria-describedby="helpId" placeholder="" value="@Model.Price">
-        <small id="helpId" class="form-text text-muted">Help text</small>
-    </div>
-
-    <div class="form-group">
-    <label for="">Descripción</label>
-    <textarea class="form-control" name="Description" id="" rows="3">@Model.Description</textarea>
-    </div>
-
-    <input type="hidden" value="@Model.UserId" name="UserId" />
-    <input type="hidden" value="@Model.CategoryId" name="CategoryId" />
+    <partial name="_Form" model="Model">
 
     <p><button type="submit" class="btn btn-success">Guardar</button></p>
 </form>

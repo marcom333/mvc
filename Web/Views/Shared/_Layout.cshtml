@@ -8,26 +8,52 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" sizes="32x32" href="~/img/awesome-face-png-1.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100&icon_names=add,delete,details,edit,edit_document,heart_smile,home,lock,package_2,search,settings,shield_locked,visibility,web" rel="stylesheet" />
 </head>
-<body class="bg-primary-subtle">
+<body class="bg-primary-subtle">    
+    @functions {
+        string GetActiveClass(string section)
+        {
+            return ViewData["nav"]?.ToString() == section ? "active" : "";
+        }
+    }
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary navbar-light border-bottom box-shadow mb-3" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></a>
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="me-1" src="~/img/awesome-face-png-1.png" alt="" width="25" height="25">
+                    Kroces Tienda
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                        <li class="nav-item @GetActiveClass("home")">
+                            <a class="nav-link d-flex align-items-center @GetActiveClass("home")" asp-area="" asp-controller="Home" asp-action="Index">
+                                <span class="material-symbols-outlined me-1">
+                                    home
+                                </span>
+                                Inicio
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Product" asp-action="Index">Productos</a>
+                        <li class="nav-item @GetActiveClass("product")">
+                            <a class="nav-link d-flex align-items-center @GetActiveClass("product")" asp-area="" asp-controller="Product" asp-action="Index">                                
+                                <span class="material-symbols-outlined me-1">
+                                    package_2
+                                </span>
+                                Productos
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
+                        <li class="nav-item @GetActiveClass("privacy")">
+                            <a class="nav-link d-flex align-items-center @GetActiveClass("privacy")" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <span class="material-symbols-outlined me-1">
+                                    shield_locked
+                                </span>
+                                Privacidad
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -42,12 +68,17 @@
 
     <footer class="border-top footer bg-primary text-white">
         <div class="container">
-            &copy; 2026 - Web - <a class="text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"> &copy; 2026 - Web - <a class="text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,56 @@
+@model Application.Entities.Product;
+
+@{
+    ViewData["Title"] = "Detalles de Producto";
+}
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered">
+            <tr>
+                <td style="30%">Nombre</td>
+                <td style="70%">@Model.Name</td>
+            </tr>
+            <tr>
+                <td style="30%">Descripción</td>
+                <td style="70%">@(string.IsNullOrEmpty(Model.Description)? "---": Model.Description)</td>
+            </tr>
+            <tr>
+                <td style="30%">Precio</td>
+                <td style="70%">@Model.Price</td>
+            </tr>
+            <tr>
+                <td style="30%">Categor'ia</td>
+                <td style="70%">
+                    @{
+                        string category = Model.CategoryId switch
+                        {
+                            1 => "Cat 1",
+                            2 => "Cat 2",
+                            3 => "Cat 3",
+                            4 => "Cat 4",
+                            5 => "Cat 5",
+                            _ => "Sin Categoria"
+                        };
+                    }
+                    @category
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -27,7 +27,12 @@
             <h2>Productos</h2>
             <hr>
             <div class="col-12 mb-3">
-                <a asp-controller="Product" asp-action="Create" class="btn btn-primary">Nuevo Producto</a>
+                <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
+                    <span class="material-symbols-outlined me-1">
+                        add
+                    </span>
+                    Nuevo Producto
+                </a>
             </div>
             <hr>
             <table class="table text-center">
@@ -43,7 +48,26 @@
                         <tr>
                             <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
                             <td>@producto.Name</td>
-                            <td><a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success">Editar Producto</a></td>
+                            <td>
+                                <a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success d-inline-flex align-items-center action-btn" 
+                                data-toggle="tooltip" data-placement="top" title="Editar Producto">
+                                    <span class="material-symbols-outlined me-1">
+                                        edit_document
+                                    </span>
+                                </a>                                
+                                <a class="btn btn-danger d-inline-flex align-items-center action-btn" 
+                                data-toggle="tooltip" data-placement="top" title="Eliminar Producto">
+                                    <span class="material-symbols-outlined me-1">
+                                        delete
+                                    </span>
+                                </a>                          
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="1" class="btn btn-light d-inline-flex align-items-center action-btn" 
+                                data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
+                                    <span class="material-symbols-outlined me-1">
+                                        visibility
+                                    </span>
+                                </a>
+                            </td>
                         </tr>
                     }
                 </tbody>

@@ -20,10 +20,12 @@ public class HomeController : Controller
     }
 
     public IActionResult Index(){
+        ViewData["nav"] = "home";
         return View();
     }
 
     public IActionResult Privacy(){
+        ViewData["nav"] = "privacy";
         return View();
     }
 

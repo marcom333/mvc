@@ -1,22 +1,23 @@
 using Application.Entities;
+using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.ViewModels;
 
 namespace Web.Controllers;
 
 public class ProductController : Controller
 {
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
+    {
+        _productService = productService;
+    }
+
     public IActionResult Index()
     {
         ViewData["nav"] = "product";
-        List<Product> productos = new List<Product>();
-        for(int i = 0; i < 10; i++)
-        {
-            productos.Add(new ()
-            {
-               Name = $"Product #{i+1}"
-            });
-        }
-        return View(productos);
+        return View(_productService.GetProducts());
     }
 
     [HttpGet]
@@ -45,8 +46,9 @@ public class ProductController : Controller
     {
         ViewData["nav"] = "product";
 
+        ProductDetailViewModel detail = new();
         //Busqueda de producto
-        Product producto = new Product()
+        detail.Product = new Product()
         {
             Name = "Lata de Verduras",
             Description = "Asi es, es una lata de verduras",
@@ -55,7 +57,19 @@ public class ProductController : Controller
             UserId = 10
         };
 
-        return View(producto);
+        detail.Category = new Category()
+        {
+            CategoryId = 1,
+            Name = "Cat 1"
+        };
+
+        detail.User = new User()
+        {
+          UserId = 1,
+          Name = "César"  
+        };
+
+        return View(detail);
     }
 
     [HttpGet("Product/Edit/{id:int}")]

@@ -1,4 +1,4 @@
-@model Application.Entities.Product;
+@model Web.ViewModels.ProductDetailViewModel;
 
 @{
     ViewData["Title"] = "Detalles de Producto";
@@ -21,26 +21,30 @@
 
 <div class="card">
     <div class="card-body">
-        <h3>Detalles de @Model.Name</h3>
+        <h3>Detalles de @Model.Product.Name</h3>
         <hr>
         <table class="table table-bordered">
             <tr>
                 <td style="30%">Nombre</td>
-                <td style="70%">@Model.Name</td>
+                <td style="70%">@Model.Product.Name</td>
             </tr>
             <tr>
                 <td style="30%">Descripción</td>
-                <td style="70%">@(string.IsNullOrEmpty(Model.Description)? "---": Model.Description)</td>
+                <td style="70%">@(string.IsNullOrEmpty(Model.Product.Description)? "---": Model.Product.Description)</td>
             </tr>
             <tr>
                 <td style="30%">Precio</td>
-                <td style="70%">@Model.Price</td>
+                <td style="70%">@Model.Product.Price</td>
             </tr>
             <tr>
-                <td style="30%">Categor'ia</td>
+                <td style="30%">Usuario</td>
+                <td style="70%">@Model.User.Name</td>
+            </tr>
+            <tr>
+                <td style="30%">Categoría</td>
                 <td style="70%">
                     @{
-                        string category = Model.CategoryId switch
+                        string category = Model.Category.CategoryId switch
                         {
                             1 => "Cat 1",
                             2 => "Cat 2",

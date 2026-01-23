@@ -2,6 +2,12 @@
 
 @model Product
 
+<h1>Detalles del producto</h1>
+
+<p>
+    <a class="btn btn-warning" asp-action="Update" asp-route-id="1">Editar</a>
+</p>
+
 @if(ViewBag.Warning != null){
     <div class="alert alert-warning" role="alert">
         <strong>warning</strong> @ViewBag.Warning
@@ -19,7 +25,7 @@
 </div>
 }
 else{
-<table>
+<table class="table table-bordered">
     <tbody>
         <tr>
             <th>Name</th>

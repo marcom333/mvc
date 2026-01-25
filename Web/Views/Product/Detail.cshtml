@@ -1,5 +1,5 @@
-@using Application.Entities
-@model Product
+@using Web.ViewModel
+@model ProductDetailViewModel
 
 @if(ViewBag.Error != null){
     <div class="alert alert-warning" role="alert">
@@ -13,23 +13,23 @@
     <tbody>
         <tr>
             <th>Name</th>
-            <td>@Model.Name </td>
+            <td>@Model.Product.Name </td>
         </tr>
         <tr>
             <th>Description</th>
-            <td>@Model.Description</td>
+            <td>@Model.Product.Description</td>
         </tr>
         <tr>
             <th>Price</th>
-            <td>@Model.Price</td>
+            <td>@Model.Product.Price</td>
         </tr>
         <tr>
             <th>Category</th>
-            <td>@Model.CategoryId</td>
+            <td>@Model.Product.CategoryId</td>
         </tr>
         <tr>
             <th>User</th>
-            <td>@Model.UserId</td>
+            <td>@Model.Product.UserId</td>
         </tr>
     </tbody>
 </table>

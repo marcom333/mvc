@@ -1,39 +1,27 @@
 using Application.Entities;
+using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.ViewModel;
 namespace Web.Controllers;
 
 public class ProductController : Controller
 {
-    [HttpGet]
-    public IActionResult Index(List<Product> products)
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        products.ForEach(x =>
-        {
-            Console.WriteLine("Nombre: " + x.Name + " Descripción: " + x.Description + " Precio: " + x.Price + " ID Categoría: " + x.CategoryId + " ID Usuario: " + x.UserId);
-        });
-        Console.WriteLine("===========================================================================================================================================================");
-        Console.WriteLine("===========================================================================================================================================================");
+        _productService = productService;
+    }
 
-        products ??= new List<Product>();
-
-        if (products.Count == 0)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                products.Add(new Product
-                {
-                    Name = "Product # " + i,
-                    CategoryId = i
-                });
-            }
-        }
-
+    [HttpGet]
+    public IActionResult Index()
+    {
         if(TempData["error"] != null)
         {
             ViewBag.error = "No existen más productos de esa categoría.";
         }
 
-        return View(products);
+        return View(_productService.GetProducts());
     }
 
     public IActionResult Create()
@@ -83,12 +71,7 @@ public class ProductController : Controller
                 });
             }
         }
-        products.ForEach(x =>
-        {
-            Console.WriteLine("Nombre: " + x.Name + " Descripción: " + x.Description + " Precio: " + x.Price + " ID Categoría: " + x.CategoryId + " ID Usuario: " + x.UserId);
-        });
-        Console.WriteLine("===========================================================================================================================================================");
-        Console.WriteLine("===========================================================================================================================================================");
+
         TempData["saved_changes"] = "Los cambios han sido guardados.";
         return RedirectToAction("Index");
     }
@@ -109,14 +92,27 @@ public class ProductController : Controller
             ViewBag.Warning = "Casi se terminan!!";
         }
 
-        return View(new Product()
+        ProductDetailViewModel detailViewModel = new();
+        detailViewModel.Product = new Product()
         {
             Name = "Product " + id,
             Description = "Test Product",
             Price = 1,
             CategoryId = 1,
             UserId = 1
-        });
+        };
+        detailViewModel.Category = new Category()
+        {
+            Name = "Verduras",
+            CategoryId = 1
+        };
+        detailViewModel.User = new User()
+        {
+            Name = "Josh",
+            UserId = 1
+        };
+
+        return View(detailViewModel);
     }
     
     public ViewResult ViewResult()

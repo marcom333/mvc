@@ -1,3 +1,5 @@
+using Application.Interface.Service;
+using Application.Service;
 using web.Tools;
 using Web.Tools;
 
@@ -5,9 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+/////////////////////Contenedores de Inyección de Dependencia //////////////////////////////////////////
 // builder.Services.AddTransient<IOutput, Output>(); // <== nuevo cada que se usa
 // builder.Services.AddScoped<IOutput, Output>(); // <== duradero
 builder.Services.AddSingleton<IOutput, Output>(); //<== cuidado
+builder.Services.AddSingleton<IProductService, ProductService>();
 
 var app = builder.Build();
 

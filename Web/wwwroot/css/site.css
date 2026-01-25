@@ -30,8 +30,12 @@ body {
   text-align: start;
 }
 
-#imagenInicio{
-  width: 37%;
+.imagen-fondo{
+  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8) ), url("/images/music_store.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* filter: brightness(50%); */
+  height: 100vh;
 }
 
 .contenedor-borde-verde{

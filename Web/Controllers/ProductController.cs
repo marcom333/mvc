@@ -1,32 +1,34 @@
 ﻿
 
 using Application.Entities;
+using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.ViewModel;
 
 namespace Web.Controllers;
 
 // Product/
+[Route("Product")]
 public class ProductController : Controller
 {
 
-    // Index
-    public IActionResult Index()
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        List<Product> products = [];
-
-        if (TempData["error"] != null)
-            ViewBag.Error = "No existen más productos de esa categoría";
-
-        for (int i = 0; i < 10; i++)
-        {
-            products.Add(new()
-            {
-                Name = "Product #" + i
-            });
-        }
-        return View(products);
+        _productService = productService;
     }
 
+    // Index
+    [HttpGet("Index")]
+    public IActionResult Index()
+    {
+        if (TempData["error"] != null)
+            ViewBag.Error = "No existen más productos de esa categoría";
+        return View(_productService.GetProducts());
+    }
+
+    [HttpGet("Detail/{id}")]
     public IActionResult Detail(int id)
     {
         ViewBag.status = TempData["status"];
@@ -41,22 +43,33 @@ public class ProductController : Controller
         if (id == 5)
             ViewBag.Warning = "Casi se terminan!!";
 
-        return View(new Product()
+        ProductDetailViewModel detail = new();
+        detail.Product = new Product()
         {
-            Name = "Detail product " + id,
+            Name = "<h1>Detail product " + id + "</h1>",
             Description = "Test product",
             Price = 1,
             CategoryId = 1,
             UserId = 1
-        });
+        };
+        detail.Category = new Category()
+        {
+            Name = "Verduras",
+            CategoryId = 1
+        };
+        detail.User = new User()
+        {
+            Name = "Juan",
+            UserId = 1
+        };
+        return View(detail);
     }
-
-    [HttpGet]
+    [HttpGet("Create")]
     public IActionResult Create()
-    {
-        return View();
+    { // get por defecto, [HttpGet] si falla
+        return View(new Product());
     }
-    [HttpPost]
+    [HttpPost("Create")]
     public IActionResult Create(Product p)
     {
         if (p.Name == "") return BadRequest();
@@ -69,7 +82,7 @@ public class ProductController : Controller
     }
 
     // Product/Update/123
-    [HttpGet]
+    [HttpGet("Update/{id}")]
     public IActionResult Update(int id)
     {
         if (id == 100) return NotFound();
@@ -82,7 +95,7 @@ public class ProductController : Controller
             UserId = 1
         });
     }
-    [HttpPost]
+    [HttpPost("Update/{id}")]
     public IActionResult Update(int id, Product p)
     {
         if (id == 100) return NotFound();
@@ -91,9 +104,9 @@ public class ProductController : Controller
         if (p.CategoryId == 0) return BadRequest();
         if (p.UserId == 0) return BadRequest();
 
-       // return RedirectToAction("Detail", new { id });
-        return RedirectToAction("Index","Home", new { id, name="hola", registrado=true });
+        return RedirectToAction("Detail", "Product", new { id, name = "hola", registrado = true });
     }
+
 
     public ViewResult ViewResult()
     {

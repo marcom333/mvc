@@ -3,7 +3,7 @@
 
 
 <form action="" method="post">
-    <div class="form-group">
+   @*  <div class="form-group">
         <label for="">Nombre</label>
         <input type="text" class="form-control" name="Name" id="" aria-describedby="helpId" placeholder="" value="@Model.Name">
         <small id="helpId" class="form-text text-muted">Help text</small>
@@ -21,7 +21,12 @@
     </div>
 
     <input type="hidden" value="@Model.UserId" name="UserId" />
-    <input type="hidden" value="@Model.CategoryId" name="CategoryId" />
+    <input type="hidden" value="@Model.CategoryId" name="CategoryId" /> *@
 
+@*     @await Html.PartialAsync(partialViewName : "_Form")
+    <hr />
+    @Html.Partial(partialViewName: "_Form") *@
+    <hr />
+    <partial name="_Form" />
     <p><button type="submit" class="btn btn-success">Guardar</button></p>
 </form>

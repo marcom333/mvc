@@ -1,6 +1,17 @@
 ﻿@using Application.Entities
+@using Web.ViewModel
 
-@model Product
+@model ProductDetailViewModel
+
+<h1>Detalles del producto</h1>
+
+<p>
+    <a href="/Product/Update/1" class="btn btn-success">Editar</a> <br>
+    <a class="btn btn-warning" asp-action="Update" asp-route-id="1">Editar</a> <br>
+    @Html.ActionLink("Registrar", "Create")<br>
+    @Html.ActionLink("Home", "Index", "Home")<br>
+    @Html.ActionLink("Editar", "Update", new { q = 1 }, new { @class = "btn btn-success", style = "text-align: center" })
+</p>
 
 @if (ViewBag.Warning != null)
 {
@@ -8,35 +19,53 @@
         <strong>warning</strong> @ViewBag.Warning
     </div>
 }
-
 @if (ViewBag.status != null)
 {
-    <div class="alert alert-success" role="alert">
-        <strong>Exito</strong> Se ha registrado good !!!  
+    <div class="alert alert-success">
+        <b>Éxito!</b> Se ha registrado con éxito.
     </div>
 }
 
-<table>
-    <tbody>
-        <tr>
-            <th>Name</th>
-            <td>@Model.Name</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>@Model.Description</td>
-        </tr>
-        <tr>
-            <th>Price</th>
-            <td>@Model.Price</td>
-        </tr>
-        <tr>
-            <th>Category</th>
-            <td>@Model.CategoryId</td>
-        </tr>
-        <tr>
-            <th>User</th>
-            <td>@Model.UserId</td>
-        </tr>
-    </tbody>
-</table>
+@if (Model.Product.Name == "test")
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>danger</strong> test activado
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>
+                    @Model.Product.Name <br>
+                    @Html.Raw(Model.Product.Name) <br>
+                    @Html.Encode(Model.Product.Name)
+                </td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>@Model.Product.Description</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>@Model.Product.Price</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>@Model.Category.Name</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td>@Model.User.Name</td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>
+                    <img src="@Url.Content("~/img/car4.webp")" alt="">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

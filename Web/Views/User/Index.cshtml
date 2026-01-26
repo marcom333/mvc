@@ -1,8 +1,8 @@
 ﻿@using Application.Entities
-@model List<Application.Entities.Product>;
+@model List<Application.Entities.User>;
 
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = "Usuarios";
 }
 
 @if (TempData["success"] != null)
@@ -26,48 +26,51 @@
         <div class="card-body">
             <h2 class="d-flex align-items-center">
                 <span class="material-symbols-outlined me-1" style="font-size: 40px;">
-                    package_2
+                    group
                 </span>
-                Productos
+                Usuarios
             </h2>
             <hr>
             <div class="col-12 mb-3">
-                <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
+                <a asp-controller="User" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
                     <span class="material-symbols-outlined me-1">
                         add
                     </span>
-                    Nuevo Producto
+                    Nuevo Usuario
                 </a>
             </div>
             <hr>
             <table class="table text-center">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">Store</th>
+                        <th style="width: 5%;">#</th>
                         <th style="width: 75%;">Nombre</th>
                         <th style="width: 20%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(Product producto in Model){
+                    @{
+                        int count = 1;
+                    }
+                    @foreach(User user in Model){
                         <tr>
-                            <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
-                            <td>@producto.Name</td>
+                            <td>@(count++)</td>
+                            <td>@user.Name @user.Primer_Apellido @user.Segundo_Apellido</td>
                             <td>
-                                <a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Editar Producto">
+                                <a asp-controller="User" asp-action="Edit" asp-route-id="1" class="btn btn-success d-inline-flex align-items-center action-btn" 
+                                data-toggle="tooltip" data-placement="top" title="Editar Usuario">
                                     <span class="material-symbols-outlined me-1">
                                         edit_document
                                     </span>
                                 </a>                                
                                 <a class="btn btn-danger d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Eliminar Producto">
+                                data-toggle="tooltip" data-placement="top" title="Eliminar Usuario">
                                     <span class="material-symbols-outlined me-1">
                                         delete
                                     </span>
                                 </a>                          
-                                <a asp-controller="Product" asp-action="Details" asp-route-id="1" class="btn btn-light d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
+                                <a asp-controller="User" asp-action="Details" asp-route-id="1" class="btn btn-light d-inline-flex align-items-center action-btn" 
+                                data-toggle="tooltip" data-placement="top" title="Detalles Usuario" style="border: 1px solid;">
                                     <span class="material-symbols-outlined me-1">
                                         visibility
                                     </span>

@@ -1,0 +1,45 @@
+@model Application.Entities.User;
+
+@{
+    ViewData["Title"] = "Detalles de Producto";
+}
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h3>Detalles de @Model.Name</h3>
+        <hr>
+        <table class="table table-bordered">            
+            <tr>
+                <td style="width: 30%">Foto</td>
+                <td style="width: 70%"><img src="~/img/user.png" alt="" width="140" height="140"></td>
+            </tr>
+            <tr>
+                <td style="width: 30%">Nombre (s)</td>
+                <td style="width: 70%">@Model.Name</td>
+            </tr>
+            <tr>
+                <td style="width: 30%">Primer Apellido</td>
+                <td style="width: 70%">@(string.IsNullOrEmpty(Model.Primer_Apellido)? "---": Model.Primer_Apellido)</td>
+            </tr>
+            <tr>
+                <td style="width: 30%">Segundo Apellido</td>
+                <td style="width: 70%">@(string.IsNullOrEmpty(Model.Segundo_Apellido)? "---": Model.Segundo_Apellido)</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
     <link rel="icon" type="image/png" sizes="32x32" href="~/img/awesome-face-png-1.png">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100&icon_names=add,delete,details,edit,edit_document,heart_smile,home,lock,package_2,search,settings,shield_locked,visibility,web" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100&icon_names=add,category,delete,details,edit,edit_document,group,heart_smile,home,lock,package_2,search,settings,shield_locked,visibility,web" rel="stylesheet" />
 </head>
 <body class="">    
     @functions {
@@ -45,6 +45,22 @@
                                     package_2
                                 </span>
                                 Productos
+                            </a>
+                        </li>
+                        <li class="nav-item @GetActiveClass("user")">
+                            <a class="nav-link d-flex align-items-center @GetActiveClass("user")" asp-area="" asp-controller="User" asp-action="Index">                                
+                                <span class="material-symbols-outlined me-1">
+                                    group
+                                </span>
+                                Usuarios
+                            </a>
+                        </li>
+                        <li class="nav-item @GetActiveClass("category")">
+                            <a class="nav-link d-flex align-items-center @GetActiveClass("category")" asp-area="" asp-controller="Category" asp-action="Index">                                
+                                <span class="material-symbols-outlined me-1">
+                                    category
+                                </span>
+                                Categorias
                             </a>
                         </li>
                         <li class="nav-item @GetActiveClass("privacy")">

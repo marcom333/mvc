@@ -1,4 +1,5 @@
 using Application.Entities;
+using Application.Interface.Repositories;
 using Application.Interface.Service;
 
 namespace Application.Services;
@@ -7,8 +8,11 @@ public class ProductService : IProductService
 {    
     private List<Product> Products;
 
-    public ProductService()
+    private readonly IProductRepository _productRepository;
+
+    public ProductService(IProductRepository productRepository)
     {
+        _productRepository = productRepository;
         Products = new List<Product>()
         {
             new Product()
@@ -55,7 +59,7 @@ public class ProductService : IProductService
 
     public List<Product> GetProducts()
     {
-        return this.Products;
+        return _productRepository.GetProducts();
     }
     
     public bool CreateProduct(Product product)

@@ -1,5 +1,8 @@
+using Application.Interface.Repositories;
 using Application.Interface.Service;
 using Application.Services;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Web.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +17,10 @@ builder.Services.AddSingleton<IOutput, OutputFecha>(); //<== cuidado
 builder.Services.AddSingleton<IProductService, ProductService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<ICategoryService, CategoryService>();
+
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+
+builder.Services.AddSingleton<DapperContext>();
 
 var app = builder.Build();
 

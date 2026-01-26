@@ -5,7 +5,7 @@ namespace Application.Entities;
 public class Product
 {
     [Key]
-    public int Id {get; set;}
+    public int ProductId {get; set;}
 
     [Required(ErrorMessage = "El nombre es Obligatorio.")]
     public string? Name {get; set;}

@@ -1,27 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Entities;
+using Application.Interface.Service;
+using System.Threading.Tasks;
 
 namespace Web.Controllers;
 public class ProductController : Controller
 {
     
-    public List<Product> products = [];
-
-    public ProductController()
+    public IProductService _productService;
+    public ProductController(IProductService productService)
     {
-        for(int i = 0;i<10;i++)
-        {
-            products.Add(new Product
-            {
-                Name="Product #"+i
-            });
-        }
+        _productService = productService;
     }
     
     
     public IActionResult Index()
     {
-        return View(products);
+        return View(_productService.GetProducts());
     }
 
 
@@ -38,21 +33,35 @@ public class ProductController : Controller
         {
             return View(product);
         }
+        _productService.CreateProduct(product);
         //*Se crea registro en BD*
         return RedirectToAction("Index");
     }
 
     [HttpPost]
-    public IActionResult Read(int product_id)
+    public async Task<IActionResult> Read(int product_id)
     {
-        return View(products[product_id]);
+        
+        Product? product = _productService.GetProduct(product_id);
+        if(product!= null)
+        {
+            return View(product);
+        }
+        TempData["MensajeError"] = "Ocurrió un error obteniendo los datos del producto";
+        return RedirectToAction("Index");
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult LoadUpdate(int product_id)
     {
-        return View("Update",products[product_id]);
+        Product? product = _productService.GetProduct(product_id);
+        if(product!= null)
+        {
+            return View("Update",product);
+        }
+        TempData["MensajeError"] = "Ocurrió un error obteniendo los datos del producto";
+        return RedirectToAction("Index");
     }
 
     [HttpPost]
@@ -63,6 +72,7 @@ public class ProductController : Controller
         {
             return View(product);
         }
+        _productService.UpdateProduct(product);
         return RedirectToAction("Index");
     }
 
@@ -70,8 +80,8 @@ public class ProductController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int product_id)
     {
-        products.RemoveAt(product_id);
-        return View(products);
+        _productService.DeleteProduct(new Product{ProductId = product_id});
+        return RedirectToAction("Index");
     }
 
     public IActionResult Detail(int product_id)
@@ -89,7 +99,7 @@ public class ProductController : Controller
         {
             ViewBag.Warning = "Casi se terminan!!";
         }
-        return View(products[product_id]);
+        return View(_productService.GetProduct(product_id));
     }
 
     public ViewResult ViewResult()

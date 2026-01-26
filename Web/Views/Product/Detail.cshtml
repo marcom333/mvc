@@ -2,27 +2,26 @@
 
 @model Product
 
-<table>
-
+<table class="table">
     <tbody>
-        <tr>
-            <th>Name</th>
+        <tr >
+            <th class="thead-dark">Name</th>
             <td>@Model.Name</td>
         </tr>
         <tr>
-            <th>Description</th>
+            <th class="thead-dark">Description</th>
             <td>@Model.Description</td>
         </tr>
         <tr>
-            <th>Price</th>
+            <th class="thead-dark">Price</th>
             <td>@Model.Price</td>
         </tr>
         <tr>
-            <th>Category</th>
+            <th class="thead-dark">Category</th>
             <td>@Model.CategoryId</td>
         </tr>
         <tr>
-            <th>User</th>
+            <th class="thead-dark">User</th>
             <td>@Model.UserId</td>
         </tr>
     </tbody>

@@ -1,27 +1,24 @@
 @using Application.Entities
 
 @model Product
-<form asp-controller = "Product" asp-action="Create">
- <label>Nombre</label>
+<input hidden class="form-control" asp-for="@Model.ProductId" />
+<label>Nombre:</label>
 <input class="form-control" asp-for="@Model.Name" />
 <span asp-validation-for="@Model.Name" class="text-danger"></span><br />
  
- <label>Precio</label>
+ <label>Precio:</label>
 <input class="form-control" asp-for="@Model.Price" />
 <span asp-validation-for="@Model.Price" class="text-danger"></span><br />
 
- <label>Descripción</label>
+ <label>Descripción:</label>
 <input class="form-control" asp-for="@Model.Description" />
 <span asp-validation-for="@Model.Name" class="text-danger"></span><br />
 
- <label>Id de categoría</label>
+ <label>Id de categoría:</label>
 <input class="form-control" asp-for="@Model.CategoryId" />
 <span asp-validation-for="@Model.Name" class="text-danger"></span><br />
 
- <label>Id de usuario</label>
+ <label>Id de usuario:</label>
 <input class="form-control" asp-for="@Model.UserId" />
 <span asp-validation-for="@Model.Name" class="text-danger"></span><br />
 <button class="btn btn-primary" type="submit">Guardar</button>
-</form>
-
-

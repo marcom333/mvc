@@ -27,25 +27,11 @@ public class ProductController : Controller {
     
     [HttpGet("Detail/{id}")]
     public IActionResult Detail(int id) {
-        ViewBag.status = TempData["status"];
-        if(id == 50) {
-            TempData["error"] = true;
-            return RedirectToAction("Index");
-        }
-
-        if(id == 100)
-            return NotFound();
-        if(id == 5)
-            ViewBag.Warning = "Casi se terminan!!";
+        Product? p = _productService.GetProduct(id);
+        if(p == null) return NotFound();
 
         ProductDetailViewModel detail = new();
-        detail.Product = new Product() {
-            Name = "<h1>Detail product "+id +"</h1>",
-            Description = "Test product",
-            Price = 1,
-            CategoryId = 1,
-            UserId = 1
-        };
+        detail.Product = p;
         detail.Category = new Category() {
             Name = "Verduras",
             CategoryId = 1
@@ -58,7 +44,10 @@ public class ProductController : Controller {
     }
     [HttpGet("Create")]
     public IActionResult Create() { // get por defecto, [HttpGet] si falla
-        return View(new Product());
+        return View(new Product() {
+            CategoryId=1,
+            UserId=1
+        });
     }
     [HttpPost("Create")]
     public IActionResult Create(Product p) {
@@ -67,33 +56,37 @@ public class ProductController : Controller {
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
         TempData["status"] = 200;
+        Product product = _productService.CreateProduct(p);
 
-        return RedirectToAction("Detail", new {id=1});
+        return RedirectToAction("Detail", new {id=product.ProductId});
     }
 
     // Product/Update/123
     [HttpGet("Update/{id}")]
     public IActionResult Update(int id) {
-        if(id == 100) return NotFound();
-        return View(new Product() {
-            Name = "Detail product "+id,
-            Description = "Test product",
-            Price = 1,
-            CategoryId = 1,
-            UserId = 1
-        });
+        Product? p = _productService.GetProduct(id);
+        if(p == null) return NotFound();
+        return View(p);
     }
     [HttpPost("Update/{id}")]
     public IActionResult Update(int id, Product p) {
-        if(id == 100) return NotFound();
+        p.ProductId = id;
         if(p.Name == "") return BadRequest();
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
+        _productService.UpdateProduct(p);
 
         return RedirectToAction("Detail", "Product", new {id, name="hola", registrado=true});
     }
 
+    [HttpPost("Delete/{id}")]
+    public IActionResult Delete(int id) {
+        Product? p = _productService.GetProduct(id);
+        if(p == null) return NotFound();
+        _productService.DeleteProduct(p);
+        return RedirectToAction("Index");
+    }
 
 
 

@@ -1,5 +1,4 @@
 
-using System.Reflection;
 using Application.Entities;
 using Application.Interface.Service;
 
@@ -8,10 +7,12 @@ namespace Application.Services;
 public class ProductService : IProductService {
 
     private List<Product> Products;
+    private int Index = 3;
 
     public ProductService() {
         Products = [
             new Product(){
+                ProductId = 1,
                 Name = "Lechuga",
                 Price = 5,
                 Description = "Lechuga normal",
@@ -19,6 +20,7 @@ public class ProductService : IProductService {
                 CategoryId = 1,
             },
             new Product(){
+                ProductId = 2,
                 Name = "Tomate",
                 Price = 5,
                 Description = "Tomate normal",
@@ -26,6 +28,7 @@ public class ProductService : IProductService {
                 CategoryId = 1,
             },
             new Product(){
+                ProductId = 3,
                 Name = "Manzana",
                 Price = 5,
                 Description = "Manzana normal",
@@ -36,11 +39,17 @@ public class ProductService : IProductService {
     }
 
     public Product CreateProduct(Product product) {
-        throw new NotImplementedException();
+        product.ProductId = ++Index;
+        Products.Add(product);
+        return product;
     }
 
-    public Product GetProduct(int ind) {
-        throw new NotImplementedException();
+    public Product? GetProduct(int id) {
+        foreach(Product p in Products) {
+            if(p.ProductId == id)
+                return p;
+        }
+        return null;
     }
 
     public List<Product> GetProducts() {
@@ -48,6 +57,22 @@ public class ProductService : IProductService {
     }
 
     public void UpdateProduct(Product product) {
-        throw new NotImplementedException();
+        foreach(Product p in Products) {
+            if(p.ProductId == product.ProductId) {
+                p.Description = product.Description;
+                p.Name = product.Name;
+                p.Price = product.Price;
+                p.CategoryId = product.CategoryId;
+                p.UserId = product.UserId;
+            }
+        }
+    }
+
+    public void DeleteProduct(Product product) {
+        for(int i = 0; i < Products.Count; i++) {
+            if(Products[i].ProductId == product.ProductId) {
+                Products.Remove(Products[i]);
+            }
+        }
     }
 }

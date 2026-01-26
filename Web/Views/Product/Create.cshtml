@@ -1,26 +1,26 @@
 @using Application.Entities
 @model Product
 
-<h1 class="border-bottom border-2 border-success">Nuevo Producto</h1>
 
 <div class="card">
     <div class="card-body">
+        <h1 class="border-bottom border-2 border-success">Add new product</h1>
         <form asp-action="Create" method="post">
             <div>
                 <div class="my-2">
-                    <div>Nombre del producto:</div>
+                    <div>Product name:</div>
                     <input type="text" asp-for="@Model.Name">
                 </div>
                 <div class="my-2">
-                    <div>Descripción:</div>
+                    <div>Description:</div>
                     <input type="text" asp-for="@Model.Name">
                 </div>
                 <div class="my-2">
-                    <div>Precio</div>
+                    <div>Price</div>
                     <input type="text" asp-for="@Model.Name">
                 </div>
                 <div class="my-2">
-                    <div>ID de Categoría</div>
+                    <div>Category</div>
                     <select class="form-select">
                         @for(int i = 0; i<10; i++){
                             <option value=@i>@i</option>
@@ -28,7 +28,7 @@
                     </select>
                 </div>
                 <div class="my-2">
-                    <div>Usuario</div>
+                    <div>User</div>
                     <select class="form-select">
                         <option value="Alice">Alice</option>
                         <option value="Bob">Bob</option>

@@ -7,29 +7,35 @@
     </div>
 }
 
-<h1 class="border-bottom border-2 border-primary">Product details</h1>
 
-<table>
-    <tbody>
-        <tr>
-            <th>Name</th>
-            <td>@Model.Product.Name </td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>@Model.Product.Description</td>
-        </tr>
-        <tr>
-            <th>Price</th>
-            <td>@Model.Product.Price</td>
-        </tr>
-        <tr>
-            <th>Category</th>
-            <td>@Model.Product.CategoryId</td>
-        </tr>
-        <tr>
-            <th>User</th>
-            <td>@Model.Product.UserId</td>
-        </tr>
-    </tbody>
-</table>
+<div class="d-flex rounded">
+    <div class="card w-100">
+        <div class="card-body">
+            <h1 class="border-bottom border-2 border-primary">Product details</h1>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="w-25">Name</th>
+                        <td>@Model.Product.Name </td>
+                    </tr>
+                    <tr>
+                        <th class="w-25">Description</th>
+                        <td>@Model.Product.Description</td>
+                    </tr>
+                    <tr>
+                        <th class="w-25">Price</th>
+                        <td>@Model.Product.Price</td>
+                    </tr>
+                    <tr>
+                        <th class="w-25">Category</th>
+                        <td>@Model.Category.Name</td>
+                    </tr>
+                    <tr>
+                        <th class="w-25">User</th>
+                        <td>@Model.User.Name</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

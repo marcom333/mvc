@@ -21,7 +21,9 @@ public class ProductController : Controller
             ViewBag.error = "No existen más productos de esa categoría.";
         }
 
-        return View(_productService.GetProducts());
+        List<Product> productsList = _productService.GetProducts();
+
+        return View(productsList);
     }
 
     public IActionResult Create()
@@ -96,14 +98,14 @@ public class ProductController : Controller
         detailViewModel.Product = new Product()
         {
             Name = "Product " + id,
-            Description = "Test Product",
+            Description = "Right handed, electric guitar, alder wood, humbucker pickups",
             Price = 1,
-            CategoryId = 1,
+            CategoryId = 1, 
             UserId = 1
         };
         detailViewModel.Category = new Category()
         {
-            Name = "Verduras",
+            Name = "Electric Guitar",
             CategoryId = 1
         };
         detailViewModel.User = new User()

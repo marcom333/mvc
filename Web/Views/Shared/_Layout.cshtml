@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
 </head> 
-<body class="imagen-fondo">
+<body class="imagen-fondo d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-verde bg-dark">
             <div class="container-fluid">
-                <img src="@Url.Content("~/images/logo_guitarra.svg")" alt="logo_guitarra" style="height:70px; color: green;">
-                <a class="navbar-brand text-center fw-bold text-light" asp-controller="Home" asp-action="Index">
-                    El Mundo <br> de las Guitarras
+                <img src="@Url.Content("~/images/logo_lego_flower.svg")" alt="logo" style="height:50px;">
+                <a class="navbar-brand text-center text-light ms-3 border-end border-2 border-light pe-3" asp-controller="Home" asp-action="Index">
+                    <span class="m-0 fs-4" style="color: burlywood;">Brick Blooms</span><br>
+                    <span class="text-light fs-6 m-0">Lego Flower Shop</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +39,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="flex-fill">
             @RenderBody()
         </main>
     </div>

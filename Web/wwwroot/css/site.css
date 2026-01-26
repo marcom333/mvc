@@ -17,9 +17,9 @@ html {
   min-height: 100%;
 }
 
-body {
+/* body {
   margin-bottom: 60px;
-}
+} */
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
@@ -31,11 +31,10 @@ body {
 }
 
 .imagen-fondo{
-  background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8) ), url("/images/music_store.jpg");
+  background-image: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ), url("/images/lego_flowers_bg.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   /* filter: brightness(50%); */
-  height: 100vh;
 }
 
 .contenedor-borde-verde{

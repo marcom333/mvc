@@ -1,5 +1,6 @@
 
 
+using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +20,10 @@ public class ProductController : Controller {
     
     // Index
     [HttpGet("Index")]
-    public IActionResult Index() {
+    public async Task<IActionResult> Index() {
         if(TempData["error"] != null)
             ViewBag.Error = "No existen más productos de esa categoría";
-        return View(_productService.GetProducts());
+        return View(await _productService.GetProducts());
     }
     
     [HttpGet("Detail/{id}")]

@@ -1,5 +1,7 @@
 
+using System.Threading.Tasks;
 using Application.Entities;
+using Application.Interface.Repositories;
 using Application.Interface.Service;
 
 namespace Application.Services;
@@ -8,8 +10,10 @@ public class ProductService : IProductService {
 
     private List<Product> Products;
     private int Index = 3;
+    private readonly IProductRepository _productRepository;
 
-    public ProductService() {
+    public ProductService(IProductRepository productRepository) {
+        _productRepository = productRepository;
         Products = [
             new Product(){
                 ProductId = 1,
@@ -52,8 +56,8 @@ public class ProductService : IProductService {
         return null;
     }
 
-    public List<Product> GetProducts() {
-        return Products;
+    public async Task<List<Product>> GetProducts() {
+        return await _productRepository.GetProducts();
     }
 
     public void UpdateProduct(Product product) {

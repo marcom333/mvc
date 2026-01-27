@@ -18,101 +18,87 @@ public class ProductController : Controller
     {
         if(TempData["error"] != null)
             ViewBag.error = "No existen más productos de esa categoría.";
-        List<Product> productsList = await _productService.GetProducts();
+        return View(await _productService.GetProducts());
+    }
 
-        return View(productsList);
+    public async Task<IActionResult> Detail(int id)
+    {
+        Product? p = await _productService.GetProduct(id);
+        if(p == null) return NotFound();
+
+        Console.WriteLine("Category: " + p.CategoryId + " " + p.CategoryName + " " + p.CategoryDescription);
+
+        ProductDetailViewModel detail = new();
+        detail.Product = p;
+        detail.Category = new Category()
+        {
+            Name = "Botanical - Flowers - Bouquet",
+            CategoryId = 1
+        };
+        detail.User = new User()
+        {
+            Name = "Josh",
+            UserId = 1
+        };
+        return View(detail);
     }
 
     public IActionResult Create()
     {
-        return View();
-    }
-
-    [HttpGet]
-    public IActionResult Update(int id)
-    {
-        return View(new Product()
-        {
-            Name = "Product " + id,
-            Description = "Test Product",
-            Price = 1,
-            CategoryId = id,
+        return View(new Product(){
+            CategoryId = 1,
             UserId = 1
         });
     }
 
     [HttpPost]
-    public IActionResult Update(Product model)
+    public async Task<IActionResult> Create(Product p){
+        if(p.Name == "") return BadRequest();
+        if(p.Price == 0) return BadRequest();
+        if(p.CategoryId == 0) return BadRequest();
+        if(p.UserId == 0) return BadRequest();
+
+        TempData["status"] = 200;
+        Product product = await _productService.CreateProduct(p);
+
+        return RedirectToAction("Detail", new {id = product.ProductId});
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Update(int id){
+        Product? p = await _productService.GetProduct(id);
+        if(p == null) return NotFound();
+        return View(p);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(int id, Product p)
     {
-        List <Product> products = [];
+        p.ProductId = id;
+        if(p.Name == "") return BadRequest();
+        if(p.Price == 0) return BadRequest();
+        if(p.CategoryId == 0) return BadRequest();
+        if(p.UserId == 0) return BadRequest();
+        await _productService.UpdateProduct(p);
 
-        for(int i=0; i<10; i++)
-        {
-            if(i == model.CategoryId)
-            {
-                products.Add(new()
-                {
-                    Name = model.Name,
-                    Description = model.Description,
-                    Price = model.Price,
-                    CategoryId = i
-                });
-            } 
-            else
-            {
-                products.Add(new()
-                {
-                    Name = "Product # " + i,
-                    Description = "Test Product",
-                    Price = 1,
-                    CategoryId = i,
-                    UserId = 1
-                });
-            }
-        }
-
-        TempData["saved_changes"] = "Los cambios han sido guardados.";
+        return RedirectToAction("Detail", "Product", new{id, name = "hola", registrado=true});
+    }
+    
+     [HttpPost("Delete/{id}")]
+    public async Task<IActionResult> Delete(int id) {
+        Product? p = await _productService.GetProduct(id);
+        if(p == null) return NotFound();
+        await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
     }
-
-    public IActionResult Detail(int id)
-    {
-        if(id == 100)
-            return NotFound();
-
-        if(id == 50)
-        {
-            TempData["error"] = true; //No mandar un objeto cuando se use TempData
-            return RedirectToAction("Index");
-        };
-
-        if(id == 5)
-        {
-            ViewBag.Warning = "Casi se terminan!!";
-        }
-
-        ProductDetailViewModel detailViewModel = new();
-        detailViewModel.Product = new Product()
-        {
-            Name = "Product " + id,
-            Description = "Right handed, electric guitar, alder wood, humbucker pickups",
-            Price = 1,
-            CategoryId = 1, 
-            UserId = 1
-        };
-        detailViewModel.Category = new Category()
-        {
-            Name = "Electric Guitar",
-            CategoryId = 1
-        };
-        detailViewModel.User = new User()
-        {
-            Name = "Josh",
-            UserId = 1
-        };
-
-        return View(detailViewModel);
-    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     public ViewResult ViewResult()
     {

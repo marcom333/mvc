@@ -6,10 +6,10 @@ namespace Application.Services;
 
 public class ProductService : IProductService
 {
+    private readonly IProductRepository _productRepository;
     private List<Product> Products;
     private int Index = 3;
-    private readonly IProductRepository _productRepository;
-     public ProductService(IProductRepository productRepository) {
+    public ProductService(IProductRepository productRepository) {
         _productRepository = productRepository;
         Products = [
             new Product(){
@@ -38,43 +38,24 @@ public class ProductService : IProductService
             }
         ];
     }
-
-    public Product CreateProduct(Product product)
+    public async Task<Product> CreateProduct(Product product)
     {
-        product.ProductId = ++Index;
-        Products.Add(product);
-        return product;
+        return await _productRepository.CreateProduct(product);
     }
 
-    public Product? GetProduct(int id) {
-        foreach(Product p in Products) {
-            if(p.ProductId == id)
-                return p;
-        }
-        return null;
+    public async Task<Product?> GetProduct(int id) {
+        return await _productRepository.GetProduct(id);
     }
 
     public async Task<List<Product>> GetProducts() {
         return await _productRepository.GetProducts();
     }
 
-    public void UpdateProduct(Product product) {
-        foreach(Product p in Products) {
-            if(p.ProductId == product.ProductId) {
-                p.Description = product.Description;
-                p.Name = product.Name;
-                p.Price = product.Price;
-                p.CategoryId = product.CategoryId;
-                p.UserId = product.UserId;
-            }
-        }
+    public async Task UpdateProduct(Product product){
+        await _productRepository.UpdateProduct(product);
     }
 
-    public void DeleteProduct(Product product) {
-        for(int i = 0; i < Products.Count; i++) {
-            if(Products[i].ProductId == product.ProductId) {
-                Products.Remove(Products[i]);
-            }
-        }
+    public async Task DeleteProduct(Product product) {
+        await _productRepository.DeleteProduct(product);
     }
 }

@@ -7,29 +7,30 @@
         <h1 class="border-bottom border-2 border-success">Add new product</h1>
         <form asp-action="Create" method="post">
             <div>
-                <div class="my-2">
-                    <div>Product name:</div>
-                    <input type="text" asp-for="@Model.Name">
+                <div class="my-2 w-50">
+                    <label class="form-label">Product name:</label>
+                    <input class="form-control" type="text" asp-for="@Model.Name">
                 </div>
-                <div class="my-2">
-                    <div>Description:</div>
-                    <input type="text" asp-for="@Model.Name">
+                <div class="my-2 w-50">
+                    <label class="form-label">Description:</label>
+                    <input class="form-control" type="text" asp-for="@Model.Name">
                 </div>
-                <div class="my-2">
-                    <div>Price</div>
-                    <input type="text" asp-for="@Model.Name">
+                <div class="my-2 w-25">
+                    <label class="form-label">Price:</label>
+                    <input class="form-control" type="number" asp-for="@Model.Name">
                 </div>
-                <div class="my-2">
-                    <div>Category</div>
+                <div class="my-2 w-25">
+                    <label class="form-label">Category:</label>
                     <select class="form-select">
                         @for(int i = 0; i<10; i++){
                             <option value=@i>@i</option>
                         }
                     </select>
                 </div>
-                <div class="my-2">
+                <div class="my-2 w-25">
                     <div>User</div>
                     <select class="form-select">
+                        <option selected>Open this select menu</option>
                         <option value="Alice">Alice</option>
                         <option value="Bob">Bob</option>
                         <option value="Charlie">Charlie</option>

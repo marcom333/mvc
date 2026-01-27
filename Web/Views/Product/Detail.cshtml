@@ -8,16 +8,18 @@
         <strong>warning</strong>@ViewBag.warning
     </div>
 }
-
-@if(ViewBag.status != null)
-{
-    <div class="alert alert-success" role="alert">
-        <b>Success</b> Se ha registrado con exito
+@if(ViewBag.status != null){
+    <div class="alert alert-success">
+        <b>Éxito!</b> Se ha registrado con éxito.
     </div>
 }
-)
-)
 
+@if(Model.Name == "test"){
+<div class="alert alert-danger" role="alert">
+    <strong>danger</strong> test activado
+</div>
+}
+else{
 <table>
     <thead>
         <tr>
@@ -30,7 +32,7 @@
     </thead>
     <tbody>
         <tr>
-            <td>@Model.Name</td>
+            <td>@Html.Raw(Model.Name)</td>
             <td>@Model.Description</td>
             <td>@Model.Price.ToString("C")</td>
             <td>@Model.CategoryId</td>
@@ -38,3 +40,4 @@
         </tr>
     </tbody>
 </table>
+}

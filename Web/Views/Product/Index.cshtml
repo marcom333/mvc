@@ -1,6 +1,24 @@
-﻿@using Application.Entities
+﻿@{
+    Layout = "~/Views/Shared/_Plantilla.cshtml";
+}
+
+@using Application.Entities
 
 @model List<Product>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">Name</div>
+        <div class="col-4">
+            <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <button type="button" class="btn btn-danger">Consutar</button>
+                <button type="button" class="btn btn-warning">Editar</button>
+                <button type="button" class="btn btn-success">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <table>
     <thead>

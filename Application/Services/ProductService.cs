@@ -43,19 +43,9 @@ public class ProductService : IProductService
         };    
     }
 
-    public Product GetProduct(int id)
+    public async Task<Product> GetProduct(int id)
     {
-        //dapper where id = id
-        Product product = new Product()
-        {
-            Name = "KeyBoard",
-            Description = "Redragon Keyboard",
-            Price = 250,
-            CategoryId = 1, 
-            UserId = 1
-        };
-
-        return product;
+        return await _productRepository.GetProduct(id);
     }
 
     public async Task<List<Product>> GetProducts()
@@ -75,10 +65,27 @@ public class ProductService : IProductService
         }
     }
 
-    public bool UpdateProduct(Product product)
+    public async Task<bool> UpdateProduct(Product product)
     {
-        //dapper Updating
-        Product Product = product;
-        return Product != null;
+        try
+        {
+            return await _productRepository.UpdateProduct(product);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al actualizar el producto: {ex}");
+            return false;
+        }
+    }
+    
+    public async Task<bool> DeleteProduct(int id)
+    {
+        try
+        {
+            return await _productRepository.DeleteProduct(id);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al eliminar el producto: {ex}");
+            return false;
+        }
     }
 }

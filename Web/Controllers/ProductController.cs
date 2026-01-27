@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -47,20 +48,13 @@ public class ProductController : Controller
     }
     
     [HttpGet]
-    public IActionResult Details()
+    public async Task<IActionResult> Details(int id)
     {
         ViewData["nav"] = "product";
 
         ProductDetailViewModel detail = new();
         //Busqueda de producto
-        detail.Product = new Product()
-        {
-            Name = "Lata de Verduras",
-            Description = "Asi es, es una lata de verduras",
-            Price = 10,
-            CategoryId = 5, 
-            UserId = 10
-        };
+        detail.Product = await _productService.GetProduct(id);
 
         detail.Category = new Category()
         {
@@ -78,7 +72,7 @@ public class ProductController : Controller
     }
 
     [HttpGet("Product/Edit/{id:int}")]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {    
         ViewData["nav"] = "product";
         if (id is 0)
@@ -87,11 +81,11 @@ public class ProductController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        return View(_productService.GetProduct(id));        
+        return View(await _productService.GetProduct(id));        
     }
 
     [HttpPost]
-    public IActionResult Update(Product product)
+    public async Task<IActionResult> Update(Product product)
     {
         ViewData["nav"] = "product";
         if (!ModelState.IsValid)
@@ -100,7 +94,7 @@ public class ProductController : Controller
             return View("Edit", product);
         }
         
-        if (_productService.UpdateProduct(product))
+        if (await _productService.UpdateProduct(product))
         {
             TempData["success"] = "El producto fue actualizado Exitosamente!";
             return RedirectToAction(nameof(Index));
@@ -110,5 +104,18 @@ public class ProductController : Controller
             TempData["error"] = "Ocurrio un error. El producto no fue actualizado!";
             return RedirectToAction(nameof(Index));
         }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        Console.WriteLine("id:"+id);
+        ViewData["nav"] = "product";        
+        if (await _productService.DeleteProduct(id))
+            TempData["success"] = "El producto fue eliminado Exitosamente!";
+        else 
+            TempData["error"] = "Ocurrio un error. El producto no fue eliminado!";
+        
+        return RedirectToAction(nameof(Index));
     }
 }

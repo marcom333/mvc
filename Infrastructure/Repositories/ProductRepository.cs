@@ -14,6 +14,32 @@ public class ProductRepository : IProductRepository
         _dapper = dapper;
     }
 
+    public async Task<Product> GetProduct(int id)
+    {
+        Product? product;
+        string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product WHERE ProductId = @ID";
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {
+                    product = await conn.QueryFirstAsync<Product>(sql, new { ID = id }, tx);
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return product;
+        }
+    }
+
     public async Task<List<Product>> GetProducts()
     {
         List<Product>? products;
@@ -65,6 +91,66 @@ public class ProductRepository : IProductRepository
             }
 
             return id != 0;
+        }        
+    }
+    
+    public async Task<bool> UpdateProduct(Product product)
+    {
+        string sql = @"
+            UPDATE dbo.Product SET CategoryId = @CategoryId, UserId = @UserId, Name = @Name, Description = @Description, Price = @Price
+            WHERE ProductId = @ProductId";
+
+        int filas = 0;
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+            
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {
+                    filas = await conn.ExecuteAsync(sql, product, tx);
+                    if(filas == 0) {                          
+                        throw new InvalidOperationException("No se actualizó el producto. Error UpdateProduct.");    
+                    }
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return filas > 0;
+        }        
+    }
+    
+    public async Task<bool> DeleteProduct(int id)
+    {
+        string sql = @"
+            DELETE FROM dbo.Product WHERE ProductId = @ID";
+
+        bool eliminado = false;
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+            
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {                    
+                    eliminado = await conn.ExecuteAsync(sql, new { ID = id }, tx) > 0;
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return eliminado;
         }        
     }
 }

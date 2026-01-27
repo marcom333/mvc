@@ -1,5 +1,8 @@
+using Application.Interface.Repositories;
 using Application.Interface.Service;
 using Application.Services;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Web.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +13,9 @@ builder.Services.AddControllersWithViews();
 // builder.Services.AddTransient<IOutput, Output>(); // <== nuevo cada que se usa
 // builder.Services.AddScoped<IOutput, Output>(); // <== duradero
 builder.Services.AddSingleton<IOutput, OutputFecha>(); //<== cuidado
-
+builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 

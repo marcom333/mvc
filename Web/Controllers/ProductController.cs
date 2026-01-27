@@ -14,14 +14,11 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         if(TempData["error"] != null)
-        {
             ViewBag.error = "No existen más productos de esa categoría.";
-        }
-
-        List<Product> productsList = _productService.GetProducts();
+        List<Product> productsList = await _productService.GetProducts();
 
         return View(productsList);
     }

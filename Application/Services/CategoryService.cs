@@ -30,7 +30,7 @@ public class CategoryService : ICategoryService
         };    
     }
 
-    public Category GetCategory(int id)
+    public Task<Category> GetCategory(int id)
     {
         //dapper where id = id
         Category category = new Category()
@@ -42,22 +42,29 @@ public class CategoryService : ICategoryService
         return category;
     }
 
-    public List<Category> GetCategories()
+    public Task<List<Category>> GetCategories()
     {
         return this.Categories;
     }
     
-    public bool CreateCategory(Category category)
+    public Task<bool> CreateCategory(Category category)
     {
         //dapper Saving
         Category newCategory = category;
         return newCategory != null;
     }
 
-    public bool UpdateCategory(Category category)
+    public Task<bool> UpdateCategory(Category category)
     {
         //dapper Updating
         Category Category = category;
-        return Category != null;
+        return false;
+    }
+    
+    public Task<bool> DeleteCategory(Category category)
+    {
+        //dapper Updating
+        Category Category = category;
+        return false;
     }
 }

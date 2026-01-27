@@ -7,10 +7,10 @@ namespace Application.Interface.Service;
 public interface IProductService
 {
 
-    public Product? GetProduct(int ind);
+    public Task <Product?> GetProduct(int ind);
     public Task<List<Product>> GetProducts();
-    public Product CreateProduct(Product product);
-    public void UpdateProduct(Product product);
-    public void DeleteProduct(Product product);
+    public Task<Product> CreateProduct(Product p);
+    public Task  UpdateProduct(Product p);
+    public Task DeleteProduct(Product p);
 
 }

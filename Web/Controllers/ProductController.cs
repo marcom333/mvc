@@ -30,9 +30,9 @@ public class ProductController : Controller
     }
 
     [HttpGet("Detail/{id}")]
-    public IActionResult Detail(int id)
+    public async Task <IActionResult> Detail(int id)
     {
-        Product? p = _productService.GetProduct(id);
+        Product? p = await _productService.GetProduct(id);
         if (p == null) return NotFound();
 
         ProductDetailViewModel detail = new();
@@ -59,23 +59,23 @@ public class ProductController : Controller
         });
     }
     [HttpPost("Create")]
-    public IActionResult Create(Product p)
+    public async Task<IActionResult> Create(Product p)
     {
         if (p.Name == "") return BadRequest();
         if (p.Price == 0) return BadRequest();
         if (p.CategoryId == 0) return BadRequest();
         if (p.UserId == 0) return BadRequest();
         TempData["status"] = 200;
-        Product product = _productService.CreateProduct(p);
+        Product product = await _productService.CreateProduct(p);
 
         return RedirectToAction("Detail", new { id = product.ProductId });
     }
 
     // Product/Update/123
     [HttpGet("Update/{id}")]
-    public IActionResult Update(int id)
+    public async Task <IActionResult> Update(int id)
     {
-        Product? p = _productService.GetProduct(id);
+        Product? p = await _productService.GetProduct(id);
         if (p == null) return NotFound();
         return View(p);
     }
@@ -93,11 +93,11 @@ public class ProductController : Controller
     }
 
     [HttpPost("Delete/{id}")]
-    public IActionResult Delete(int id)
+    public async Task <IActionResult> Delete(int id)
     {
-        Product? p = _productService.GetProduct(id);
+        Product? p = await _productService.GetProduct(id);
         if (p == null) return NotFound();
-        _productService.DeleteProduct(p);
+        await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
     }
 

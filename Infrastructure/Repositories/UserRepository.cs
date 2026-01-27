@@ -6,18 +6,18 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public class ProductRepository : IProductRepository
+public class UserRepository : IUserRepository
 {
     private readonly DapperContext _dapper;
-    public ProductRepository(DapperContext dapper)
+    public UserRepository(DapperContext dapper)
     {
         _dapper = dapper;
     }
 
-    public async Task<Product> GetProduct(int id)
+    public async Task<User> GetUser(int id)
     {
-        Product? product;
-        string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product WHERE ProductId = @ID";
+        User? user;
+        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido FROM dbo.[User] WHERE UserId = @ID";
 
         using (var conn = _dapper.GetConnection())
         {
@@ -27,7 +27,7 @@ public class ProductRepository : IProductRepository
             {
                 try
                 {
-                    product = await conn.QueryFirstOrDefaultAsync<Product>(sql, new { ID = id }, tx);
+                    user = await conn.QueryFirstOrDefaultAsync<User>(sql, new { ID = id }, tx);
                     tx.Commit();
                 }
                 catch { 
@@ -36,14 +36,14 @@ public class ProductRepository : IProductRepository
                 }
             }
 
-            return product != null? product: new Product();
+            return user != null? user: new User();
         }
     }
 
-    public async Task<List<Product>> GetProducts()
+    public async Task<List<User>> GetUsers()
     {
-        List<Product>? products;
-        string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product";
+        List<User>? users;
+        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido FROM dbo.[User]";
 
         using (var conn = _dapper.GetConnection())
         {
@@ -53,7 +53,7 @@ public class ProductRepository : IProductRepository
             {
                 try
                 {
-                    products = (await conn.QueryAsync<Product>(sql, null, tx)).ToList();
+                    users = (await conn.QueryAsync<User>(sql, null, tx)).ToList();
                     tx.Commit();
                 }
                 catch { 
@@ -62,14 +62,14 @@ public class ProductRepository : IProductRepository
                 }
             }
 
-            return products;
+            return users;
         }
     }
 
-    public async Task<bool> CreateProduct(Product product)
+    public async Task<bool> CreateUser(User user)
     {
-        string sql = @"INSERT INTO dbo.Product (CategoryId, UserId, Name, Description, Price) 
-            Values (@CategoryId, @UserId, @Name, @Description, @Price) SELECT CAST(SCOPE_IDENTITY() AS INT)";
+        string sql = @"INSERT INTO dbo.[User] (Name, Primer_Apellido, Segundo_Apellido) 
+            Values (@Name, @Primer_Apellido, @Segundo_Apellido) SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
         int id = 0;
 
@@ -81,7 +81,7 @@ public class ProductRepository : IProductRepository
             {
                 try
                 {
-                    id = await conn.ExecuteScalarAsync<int>(sql, product, tx);
+                    id = await conn.ExecuteScalarAsync<int>(sql, user, tx);
                     tx.Commit();
                 }
                 catch { 
@@ -94,11 +94,11 @@ public class ProductRepository : IProductRepository
         }        
     }
     
-    public async Task<bool> UpdateProduct(Product product)
+    public async Task<bool> UpdateUser(User user)
     {
         string sql = @"
-            UPDATE dbo.Product SET CategoryId = @CategoryId, UserId = @UserId, Name = @Name, Description = @Description, Price = @Price
-            WHERE ProductId = @ProductId";
+            UPDATE dbo.[User] SET Name = @Name, Primer_Apellido = @Primer_Apellido, Segundo_Apellido = @Segundo_Apellido
+            WHERE UserId = @UserId";
 
         int filas = 0;
 
@@ -110,9 +110,9 @@ public class ProductRepository : IProductRepository
             {
                 try
                 {
-                    filas = await conn.ExecuteAsync(sql, product, tx);
+                    filas = await conn.ExecuteAsync(sql, user, tx);
                     if(filas == 0) {                          
-                        throw new InvalidOperationException("No se actualizó el producto. Error UpdateProduct.");    
+                        throw new InvalidOperationException("No se actualizó el usuario. Error UpdateUser.");    
                     }
                     tx.Commit();
                 }
@@ -126,10 +126,10 @@ public class ProductRepository : IProductRepository
         }        
     }
     
-    public async Task<bool> DeleteProduct(int id)
+    public async Task<bool> DeleteUser(int id)
     {
         string sql = @"
-            DELETE FROM dbo.Product WHERE ProductId = @ID";
+            DELETE FROM dbo.[User] WHERE UserId = @ID";
 
         bool eliminado = false;
 

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,10 @@ public class UserController : Controller
         _userService = userService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewData["nav"] = "user";
-        return View(_userService.GetUsers());
+        return View(await _userService.GetUsers());
     }
     
     [HttpGet]
@@ -27,7 +28,7 @@ public class UserController : Controller
     }
     
     [HttpPost]
-    public IActionResult Store(User user)    
+    public async Task<IActionResult> Store(User user)    
     {
         ViewData["nav"] = "product";
         if (!ModelState.IsValid)
@@ -36,36 +37,24 @@ public class UserController : Controller
             return View("Create", user);
         }
 
-        if (_userService.CreateUser(user))
-        {
+        if (await _userService.CreateUser(user))
             TempData["success"] = "El usuario fue registrado Exitosamente!";
-            return RedirectToAction(nameof(Index));
-        }
         else
-        {            
             TempData["error"] = "Ocurrio un error. El usuario no fue registrado!";
-            return RedirectToAction(nameof(Index));
-        }
+
+        return RedirectToAction(nameof(Index));
     }
     
     [HttpGet]
-    public IActionResult Details()
+    public async Task<IActionResult> Details(int id)
     {
         ViewData["nav"] = "user";
-
-        User user = new User()
-        {
-          UserId = 1,
-          Name = "César Javier",
-          Primer_Apellido = "Maldonado",
-          Segundo_Apellido = "Flores"
-        };
-
+        User user = await _userService.GetUser(id);
         return View(user);
     }
     
     [HttpGet("User/Edit/{id:int}")]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {    
         ViewData["nav"] = "user";
         if (id is 0)
@@ -74,11 +63,11 @@ public class UserController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        return View(_userService.GetUser(id));        
+        return View(await _userService.GetUser(id));        
     }
 
     [HttpPost]
-    public IActionResult Update(User user)
+    public async Task<IActionResult> Update(User user)
     {
         ViewData["nav"] = "user";
         if (!ModelState.IsValid)
@@ -87,15 +76,23 @@ public class UserController : Controller
             return View("Edit", user);
         }
         
-        if (_userService.UpdateUser(user))
-        {
+        if (await _userService.UpdateUser(user))
             TempData["success"] = "El usuario fue actualizado Exitosamente!";
-            return RedirectToAction(nameof(Index));
-        }
         else
-        {            
             TempData["error"] = "Ocurrio un error. El usuario no fue actualizado!";
-            return RedirectToAction(nameof(Index));
-        }
+        
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        ViewData["nav"] = "user";        
+        if (await _userService.DeleteUser(id))
+            TempData["success"] = "El usuario fue eliminado Exitosamente!";
+        else 
+            TempData["error"] = "Ocurrio un error. El usuario no fue eliminado!";
+        
+        return RedirectToAction(nameof(Index));
     }
 }

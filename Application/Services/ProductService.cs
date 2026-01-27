@@ -7,45 +7,17 @@ namespace Application.Services;
 
 public class ProductService : IProductService
 {    
-    private List<Product> Products;
-
     private readonly IProductRepository _productRepository;
 
     public ProductService(IProductRepository productRepository)
     {
         _productRepository = productRepository;
-        Products = new List<Product>()
-        {
-            new Product()
-            {
-                Name = "KeyBoard",
-                Price = 250,
-                Description = "Redragon Keyboard",
-                UserId = 1,
-                CategoryId = 1,
-            },            
-            new Product()
-            {
-                Name = "Mouse",
-                Price = 150,
-                Description = "Vorago Mouse",
-                UserId = 1,
-                CategoryId = 1,
-            },
-            new Product()
-            {
-                Name = "MotherBoard GTX",
-                Price = 2050,
-                Description = "Motherboard GTX Gaming Xperience",
-                UserId = 1,
-                CategoryId = 2,
-            }
-        };    
     }
 
     public async Task<Product> GetProduct(int id)
     {
-        return await _productRepository.GetProduct(id);
+        Product? product = await _productRepository.GetProduct(id);
+        return product != null? product: new Product();
     }
 
     public async Task<List<Product>> GetProducts()

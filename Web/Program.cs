@@ -19,6 +19,7 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<ICategoryService, CategoryService>();
 
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddSingleton<DapperContext>();
 

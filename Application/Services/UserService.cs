@@ -1,73 +1,41 @@
 using Application.Entities;
 using Application.Interface.Service;
+using Application.Interface.Repositories;
 
 namespace Application.Services;
 
 public class UserService : IUserService
-{
-    
-    private List<User> Users;
+{    
+    private readonly IUserRepository _userRepository;
 
-    public UserService()
+    public UserService(IUserRepository userRepository)
     {
-        Users = new List<User>()
-        {
-            new User()
-            {
-                Name = "César Javier",
-                Primer_Apellido = "Maldonado",
-                Segundo_Apellido = "Flores",
-            },
-            new User()
-            {
-                Name = "Marco",
-                Primer_Apellido = "Trujillo",
-                Segundo_Apellido = "Castillo",
-            },
-            new User()
-            {
-                Name = "Rosa",
-                Primer_Apellido = "Del Valle",
-                Segundo_Apellido = "Dolores",
-            },
-            new User()
-            {
-                Name = "Sergio",
-                Primer_Apellido = "Monarca",
-                Segundo_Apellido = "Talamantes",
-            }
-        };    
+        _userRepository = userRepository;
     }
 
-    public User GetUser(int id)
+    public async Task<User> GetUser(int id)
     {
-        //dapper where id = id
-        User user = new User()
-        {
-            Name = "Monica",
-            Primer_Apellido = "Rivera",
-            Segundo_Apellido = "Rivera",
-        };
-
-        return user;
+        User? user = await _userRepository.GetUser(id);
+        return user != null? user: new User();
     }
 
-    public List<User> GetUsers()
+    public async Task<List<User>> GetUsers()
     {
-        return this.Users;
+        return await _userRepository.GetUsers();
     }
     
-    public bool CreateUser(User user)
+    public async Task<bool> CreateUser(User user)
     {
-        //dapper Saving
-        User newUser = user;
-        return newUser != null;
+        return await _userRepository.CreateUser(user);
     }
 
-    public bool UpdateUser(User user)
+    public async Task<bool> UpdateUser(User user)
     {
-        //dapper Updating
-        User User = user;
-        return User != null;
+        return await _userRepository.UpdateUser(user);
+    }
+    
+    public async Task<bool> DeleteUser(int id)
+    {
+        return await _userRepository.DeleteUser(id);
     }
 }

@@ -49,29 +49,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(Product producto in Model){
+                    @if(Model.Count() > 0){
+                        @foreach(Product producto in Model){
+                            <tr>
+                                <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
+                                <td>@producto.Name</td>
+                                <td>
+                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success d-inline-flex align-items-center action-btn" 
+                                    data-toggle="tooltip" data-placement="top" title="Editar Producto">
+                                        <span class="material-symbols-outlined me-1">
+                                            edit_document
+                                        </span>
+                                    </a>                                
+                                    <a class="btn btn-danger d-inline-flex align-items-center action-btn" 
+                                    data-toggle="tooltip" data-placement="top" title="Eliminar Producto">
+                                        <span class="material-symbols-outlined me-1">
+                                            delete
+                                        </span>
+                                    </a>                          
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="1" class="btn btn-light d-inline-flex align-items-center action-btn" 
+                                    data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
+                                        <span class="material-symbols-outlined me-1">
+                                            visibility
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }else{
                         <tr>
-                            <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
-                            <td>@producto.Name</td>
-                            <td>
-                                <a asp-controller="Product" asp-action="Edit" asp-route-id="1" class="btn btn-success d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Editar Producto">
-                                    <span class="material-symbols-outlined me-1">
-                                        edit_document
-                                    </span>
-                                </a>                                
-                                <a class="btn btn-danger d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Eliminar Producto">
-                                    <span class="material-symbols-outlined me-1">
-                                        delete
-                                    </span>
-                                </a>                          
-                                <a asp-controller="Product" asp-action="Details" asp-route-id="1" class="btn btn-light d-inline-flex align-items-center action-btn" 
-                                data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
-                                    <span class="material-symbols-outlined me-1">
-                                        visibility
-                                    </span>
-                                </a>
+                            <td class="text-muted" colspan="3">
+                                No hay productos para mostrar
+                                <br>
+                                <img src="~/img/empty.png" alt="" width="300" height="250" style="opacity: 0.65;">
                             </td>
                         </tr>
                     }

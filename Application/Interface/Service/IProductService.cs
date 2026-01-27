@@ -6,9 +6,9 @@ public interface IProductService
 {
     public Product GetProduct(int id);
 
-    public List<Product> GetProducts();
+    public Task<List<Product>> GetProducts();
 
-    public bool CreateProduct(Product product);
+    public Task<bool> CreateProduct(Product product);
 
     public bool UpdateProduct(Product product);
 }

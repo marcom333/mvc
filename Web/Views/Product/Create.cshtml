@@ -26,6 +26,8 @@
         <form asp-controller="Product" asp-action="Store" method="POST">    
             @Html.AntiForgeryToken()
 
+            <input type="hidden" name="UserId" value="1">
+
             <div class="mb-3">
                 <div class="col-12">
                     <label asp-for="Name" class="form-label">Nombre *:</label>

@@ -14,10 +14,11 @@ public class ProductController : Controller
         _productService = productService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewData["nav"] = "product";
-        return View(_productService.GetProducts());
+        List<Product> products = await _productService.GetProducts();
+        return View(products);
     }
 
     [HttpGet]
@@ -28,7 +29,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult Store(Product product)
+    public async Task<IActionResult> Store(Product product)
     {
         ViewData["nav"] = "product";
         if (!ModelState.IsValid)
@@ -37,16 +38,12 @@ public class ProductController : Controller
             return View("Create", product);
         }
 
-        if (_productService.CreateProduct(product))
-        {
+        if (await _productService.CreateProduct(product))
             TempData["success"] = "El producto fue almacenado Exitosamente!";
-            return RedirectToAction(nameof(Index));
-        }
         else
-        {            
             TempData["error"] = "Ocurrio un error. El producto no fue almacenado!";
-            return RedirectToAction(nameof(Index));
-        }
+
+        return RedirectToAction(nameof(Index));
     }
     
     [HttpGet]

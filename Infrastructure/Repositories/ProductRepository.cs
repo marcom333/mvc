@@ -16,22 +16,55 @@ public class ProductRepository : IProductRepository
 
     public async Task<List<Product>> GetProducts()
     {
-        using IDbConnection conn = _dapper.GetConnection();
-        conn.Open();
-        return (await conn.QueryAsync<Product>(@"
-            SELECT 
-                ProductId,
-                CategoryId,
-                UserId,
-                Name,
-                Description,
-                Price
-            FROM dbo.Product"
-        )).ToList();
+        List<Product>? products;
+        string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product";
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {
+                    products = (await conn.QueryAsync<Product>(sql, null, tx)).ToList();
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return products;
+        }
     }
 
-    List<Product> IProductRepository.GetProducts()
+    public async Task<bool> CreateProduct(Product product)
     {
-        throw new NotImplementedException();
+        string sql = @"INSERT INTO dbo.Product (CategoryId, UserId, Name, Description, Price) 
+            Values (@CategoryId, @UserId, @Name, @Description, @Price) SELECT CAST(SCOPE_IDENTITY() AS INT)";
+
+        int id = 0;
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+            
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {
+                    id = await conn.ExecuteScalarAsync<int>(sql, product, tx);
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return id != 0;
+        }        
     }
 }

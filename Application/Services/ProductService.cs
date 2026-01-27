@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Repositories;
 using Application.Interface.Service;
@@ -57,16 +58,21 @@ public class ProductService : IProductService
         return product;
     }
 
-    public List<Product> GetProducts()
+    public async Task<List<Product>> GetProducts()
     {
-        return _productRepository.GetProducts();
+        return await _productRepository.GetProducts();
     }
     
-    public bool CreateProduct(Product product)
+    public async Task<bool> CreateProduct(Product product)
     {
-        //dapper Saving
-        Product newProduct = product;
-        return newProduct != null;
+        try
+        {
+            return await _productRepository.CreateProduct(product);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al guardar el producto: {ex}");
+            return false;
+        }
     }
 
     public bool UpdateProduct(Product product)

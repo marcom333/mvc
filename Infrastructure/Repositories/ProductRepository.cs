@@ -37,8 +37,8 @@ public class ProductRepository : IProductRepository{
                 p.Price, 
                 p.Description, 
                 p.UserId, 
-                p.CategoryId,
-                c.CategoryId as CategoryId,
+                --p.CategoryId,
+                c.CategoryId,
                 c.Name,
                 c.Description
             FROM dbo.Product p

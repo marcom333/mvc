@@ -30,11 +30,8 @@ public class ProductController : Controller
 
         ProductDetailViewModel detail = new();
         detail.Product = p;
-        detail.Category = new Category()
-        {
-            Name = "Botanical - Flowers - Bouquet",
-            CategoryId = 1
-        };
+        detail.Category.CategoryId = p.Category.CategoryId;
+        detail.Category.Name = p.Category.Name;
         detail.User = new User()
         {
             Name = "Josh",

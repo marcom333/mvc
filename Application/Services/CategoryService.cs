@@ -1,63 +1,77 @@
 using Application.Entities;
 using Application.Interface.Service;
+using Application.Interface.Repositories;
+using System.Threading.Tasks;
 
 namespace Application.Services;
 
 public class CategoryService : ICategoryService
 {
-    
-    private List<Category> Categories;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public CategoryService()
+    public CategoryService(ICategoryRepository categoryRepository)
     {
-        Categories = new List<Category>()
-        {
-            new Category()
-            {
-                Name = "Accesorios",
-                Description = "En globa productos de la categoria accesorios."
-            },
-            new Category()
-            {
-                Name = "Perifericos",
-                Description = "En globa productos de la categoria Perifericos."
-            },
-            new Category()
-            {
-                Name = "Computación",
-                Description = "En globa productos de la categoria computación."
-            },
-        };    
+        _categoryRepository = categoryRepository; 
     }
 
-    public Category GetCategory(int id)
+    public async Task<Category> GetCategory(int id)
     {
-        //dapper where id = id
-        Category category = new Category()
+        try
         {
-            Name = "Electrodomésticos",
-            Description = "En globa todos los productos de la categoría electrodomésticos",
-        };
-
-        return category;
+            Category? category = await _categoryRepository.GetCategory(id);
+            return category != null? category: new Category();
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al guardar la categoria: {ex}");
+            return new Category();
+        }
     }
 
-    public List<Category> GetCategories()
+    public async Task<List<Category>> GetCategories()
     {
-        return this.Categories;
+        try
+        {
+            return await _categoryRepository.GetCategories();
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al obtener las categorias: {ex}");
+            return new List<Category>();
+        }
     }
     
-    public bool CreateCategory(Category category)
+    public async Task<bool> CreateCategory(Category category)
     {
-        //dapper Saving
-        Category newCategory = category;
-        return newCategory != null;
+        try
+        {
+            return await _categoryRepository.CreateCategory(category);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al guardar la categoria: {ex}");
+            return false;
+        }
     }
 
-    public bool UpdateCategory(Category category)
+    public async Task<bool> UpdateCategory(Category category)
     {
-        //dapper Updating
-        Category Category = category;
-        return Category != null;
+        try
+        {
+            return await _categoryRepository.UpdateCategory(category);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al actualizar la categoria: {ex}");
+            return false;
+        }
+    }
+    
+    public async Task<bool> DeleteCategory(int id)
+    {
+        try
+        {
+            return await _categoryRepository.DeleteCategory(id);
+        }catch(Exception ex)
+        {
+            Console.WriteLine($"Ocurrio un error al eliminar la categoria: {ex}");
+            return false;
+        }
     }
 }

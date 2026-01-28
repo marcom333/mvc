@@ -20,6 +20,7 @@ builder.Services.AddSingleton<ICategoryService, CategoryService>();
 
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddSingleton<DapperContext>();
 

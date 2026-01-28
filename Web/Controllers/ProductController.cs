@@ -37,9 +37,9 @@ public class ProductController : Controller {
         return View(p);
     }
     [HttpGet("Create")]
-    public IActionResult Create() { // get por defecto, [HttpGet] si falla
-        ViewBag.Categories = _categoryService.GetCategorys();
-        ViewBag.Users = _userService.GetUsers();
+    public async Task<IActionResult> Create() { // get por defecto, [HttpGet] si falla
+        ViewBag.Categories = await _categoryService.GetCategorys();
+        ViewBag.Users = await _userService.GetUsers();
         return View(new Product());
     }
     [HttpPost("Create")]

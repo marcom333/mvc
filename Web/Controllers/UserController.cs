@@ -13,7 +13,8 @@ public class UserController : Controller {
     }
 
     public async Task<IActionResult> Index() {
-        return View(await _userService.GetUsers());
+        List<User> users = await _userService.GetUsers();
+        return View(users);
     }
     
     public async Task<IActionResult> Detail(int id) {

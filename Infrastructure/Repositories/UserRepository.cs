@@ -43,7 +43,7 @@ public class UserRepository : IUserRepository{
                 c.CategoyId = p.CategoryId
         ";
         Dictionary<int, User> dict = [];
-        IEnumerable<User> users = await con.QueryAsync<User, Product, Category, User>(
+        await con.QueryAsync<User, Product, Category, User>(
             query,
             (user, product, category) => {
                 User? current = dict.GetValueOrDefault(user.UserId); 
@@ -53,12 +53,19 @@ public class UserRepository : IUserRepository{
                 }
                 if(product != null) {
                     product.Category = category;
+                    product.CategoryId = category.CategoryId; 
+                    product.User = current;
+                    product.UserId = current.UserId;
+                    current.Products.Add(product);
                 }
                 return user;
             },
             splitOn: "ProductId,CategoryId"
         );
-
+        List<User> users = [];
+        foreach(KeyValuePair<int, User> u in dict) {
+            users.Add(u.Value);
+        }
 
         return users.ToList();
     }
@@ -97,21 +104,24 @@ public class UserRepository : IUserRepository{
                 c.CategoyId = p.CategoryId
             WHERE u.UserId = @id";
         User? outputUser = null;
-        User users = con.Query<User, Product, Category, User>(
+        User users = (await con.QueryAsync<User, Product, Category, User>(
             sql,
             (user, product, category) =>{
                 if (outputUser == null)
                     outputUser = user;
                 if (product != null){
-                    product.Category = category; 
+                    product.Category = category;
+                    product.CategoryId = category.CategoryId; 
+                    product.User = outputUser;
+                    product.UserId = outputUser.UserId;
                     outputUser.Products.Add(product);
                 }
                 return outputUser;
             },
             new { id },
             splitOn: "ProductId,CategoryId"
-        ).First();
-        return users;
+        )).First();
+        return outputUser;
     }
     public async Task DeleteUser(User p) {
         using IDbConnection con = _context.GetConnection();

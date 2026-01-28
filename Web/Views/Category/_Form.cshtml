@@ -1,0 +1,14 @@
+@using Application.Entities
+
+@model Category;
+
+<div class="form-group">
+    <label for="">Nombre</label>
+    <input type="text" class="form-control" asp-for="Name">
+    <small id="helpId" class="form-text text-muted">Help text</small>
+</div>
+
+<div class="form-group">
+    <label for="">Descripción</label>
+    <textarea class="form-control" name="Description" id="" rows="3">@Model.Description</textarea>
+</div>

@@ -19,6 +19,7 @@ public class Product {
     public int UserId {get; set;}
 
     public Category? Category {get; set;}
+    public User? User {get; set;}
 
     public string? CategoryName {get; set;}
     public string? CategoryDescription {get; set;}

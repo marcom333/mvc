@@ -1,5 +1,5 @@
-﻿@using Application.Entities
-@model List<Application.Entities.Product>;
+﻿@using Application.Entities;
+@model Web.ViewModels.ProductIndexViewModel;
 
 @{
     ViewData["Title"] = "Productos";
@@ -44,20 +44,24 @@
                 <thead>
                     <tr>
                         <th style="width: 5%;">Store</th>
-                        <th style="width: 30%;">Nombre</th>
-                        <th style="width: 30%;">Descripción</th>
+                        <th style="width: 20%;">Nombre</th>
+                        <th style="width: 20%;">Descripción</th>
                         <th style="width: 15%;">Precio</th>
-                        <th style="width: 20%;">Acciones</th>
+                        <th style="width: 10%;">Categoría</th>
+                        <th style="width: 15%;">Usuario</th>
+                        <th style="width: 15%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if(Model.Count() > 0){
-                        @foreach(Product producto in Model){
+                    @if(Model.Products.Count() > 0){
+                        @foreach(Product producto in Model.Products){
                             <tr>
                                 <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
                                 <td>@producto.Name</td>
                                 <td>@producto.Description</td>
                                 <td>$ @producto.Price</td>
+                                <td>@(producto.ProductCategory?.Name?? "---")</td>
+                                <td>@(producto.ProductUser != null? producto.ProductUser.Name+" "+producto.ProductUser.Primer_Apellido+" "+producto.ProductUser.Segundo_Apellido: "---" )</td>
                                 <td>
                                     <a asp-controller="Product" asp-action="Edit" asp-route-id="@producto.ProductId" class="btn btn-success d-inline-flex align-items-center action-btn" 
                                     data-toggle="tooltip" data-placement="top" title="Editar Producto">

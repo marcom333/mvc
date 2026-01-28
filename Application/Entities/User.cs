@@ -14,4 +14,7 @@ public class User
 
     [Required(ErrorMessage = "El segundo apellido es Obligatorio.")]
     public string Segundo_Apellido { get; set; }
+    
+    public string NombreCompleto =>
+        $"{Name} {Primer_Apellido} {Segundo_Apellido}";
 }

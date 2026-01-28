@@ -43,24 +43,28 @@ public class ProductRepository : IProductRepository
     public async Task<List<Product>> GetProducts()
     {
         List<Product>? products;
-        string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product";
+        string sql = @"
+            SELECT p.ProductId, p.Name, p.Description, p.Price,
+                c.CategoryId, c.Name, c.Description,
+                u.UserId, u.Name, u.Primer_Apellido, u.Segundo_Apellido 
+            FROM dbo.Product p 
+            INNER JOIN dbo.Category c ON p.CategoryId = c.CategoryId
+            INNER JOIN dbo.[User] u ON u.UserId = p.UserId";
 
         using (var conn = _dapper.GetConnection())
         {
             conn.Open();
 
-            using (var tx = conn.BeginTransaction())
-            {
-                try
+            products = (await conn.QueryAsync<Product, Category, User, Product>(sql,
+                (p, c, u) =>
                 {
-                    products = (await conn.QueryAsync<Product>(sql, null, tx)).ToList();
-                    tx.Commit();
-                }
-                catch { 
-                    tx.Rollback();
-                    throw;
-                }
-            }
+                    p.ProductCategory = c;
+                    p.ProductUser = u;
+                    return p;
+                },
+                param: null,
+                splitOn: "CategoryId,UserId")
+            ).ToList();                  
 
             return products;
         }

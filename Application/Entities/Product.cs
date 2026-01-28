@@ -19,5 +19,11 @@ public class Product
     [Required(ErrorMessage = "La categoría es Obligatoria.")]
     public int? CategoryId {get; set;}
 
+    [Required(ErrorMessage = "El usuario es Obligatorio.")]
     public int? UserId {get; set;}
+
+    
+    public Category? ProductCategory {get; set;}
+
+    public User? ProductUser {get; set;}
 }

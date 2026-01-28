@@ -38,12 +38,12 @@ public class ProductRepository : IProductRepository{
                 p.Description, 
                 p.UserId, 
                 p.CategoryId,
-                c.CategoyId as CategoryId,
+                c.CategoryId as CategoryId,
                 c.Name,
                 c.Description
             FROM dbo.Product p
             INNER JOIN dbo.Category c ON
-                p.CategoryId = c.CategoyId
+                p.CategoryId = c.CategoryId
             WHERE ProductId = @productId";
         return (await con.QueryAsync<Product, Category, Product>(sql, 
             (p, c) => {

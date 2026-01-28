@@ -3,7 +3,7 @@ using Application.Entities;
 
 namespace Application.Services;
 
-public class ProductService : IProductService
+public class ProductService
 {
     private List<Product>Products;
     public void CreateProduct(Product product)

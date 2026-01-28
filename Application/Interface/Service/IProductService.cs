@@ -4,9 +4,10 @@ namespace Application.Interface.Service;
 
 public interface IProductService
 {
-    public Product? GetProduct(int ind);
-    public List<Product>GetProducts();
-    public void CreateProduct(Product product);
-    public void UpdateProduct(Product product);
-    public void DeleteProduct(Product product);
+    public Task<Product> GetProduct(int id);
+    public Task<List<Product>>GetProducts();
+    
+    public Task<int> CreateProduct(Product p);
+    public Task<bool> UpdateProduct(Product p);
+    public Task<bool> DeleteProduct(Product p);
 }

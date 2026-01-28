@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
 using Application.Services;
@@ -13,10 +14,10 @@ public class CategoryController : Controller
         _categoryService = categoryService;
     }
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         ViewData["nav"] = "category";
-        return View(_categoryService.GetCategories());
+        return View(await _categoryService.GetCategories());
     }
     
     [HttpGet]
@@ -27,7 +28,7 @@ public class CategoryController : Controller
     }
     
     [HttpPost]
-    public IActionResult Store(Category category)    
+    public async Task<IActionResult> Store(Category category)    
     {
         ViewData["nav"] = "category";
         if (!ModelState.IsValid)
@@ -36,35 +37,24 @@ public class CategoryController : Controller
             return View("Create", category);
         }
 
-        if (_categoryService.CreateCategory(category))
-        {
+        if (await _categoryService.CreateCategory(category))
             TempData["success"] = "La categoría fue registrada Exitosamente!";
-            return RedirectToAction(nameof(Index));
-        }
         else
-        {            
             TempData["error"] = "Ocurrio un error. La categoría no fue registrada!";
-            return RedirectToAction(nameof(Index));
-        }
+        
+        return RedirectToAction(nameof(Index));
     }
     
     [HttpGet]
-    public IActionResult Details()
+    public async Task<IActionResult> Details(int id)
     {
         ViewData["nav"] = "category";
 
-        Category category = new Category()
-        {
-          CategoryId = 1,
-          Name = "Electrónica",
-          Description = "En globa todos los productos de electrónica"
-        };
-
-        return View(category);
+        return View(await _categoryService.GetCategory(id));
     }
     
     [HttpGet("Category/Edit/{id:int}")]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {    
         ViewData["nav"] = "category";
         if (id is 0)
@@ -73,11 +63,11 @@ public class CategoryController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        return View(_categoryService.GetCategory(id));        
+        return View(await _categoryService.GetCategory(id));        
     }
 
     [HttpPost]
-    public IActionResult Update(Category category)
+    public async Task<IActionResult> Update(Category category)
     {
         ViewData["nav"] = "category";
         if (!ModelState.IsValid)
@@ -86,15 +76,23 @@ public class CategoryController : Controller
             return View("Edit", category);
         }
         
-        if (_categoryService.UpdateCategory(category))
-        {
+        if (await _categoryService.UpdateCategory(category))
             TempData["success"] = "La categoría fue actualizada Exitosamente!";
-            return RedirectToAction(nameof(Index));
-        }
-        else
-        {            
+        else     
             TempData["error"] = "Ocurrio un error. La categoría no fue actualizada!";
-            return RedirectToAction(nameof(Index));
-        }
+        
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
+    {
+        ViewData["nav"] = "product";        
+        if (await _categoryService.DeleteCategory(id))
+            TempData["success"] = "La categoría fue eliminada Exitosamente!";
+        else 
+            TempData["error"] = "Ocurrio un error. La categoría no fue eliminada!";
+        
+        return RedirectToAction(nameof(Index));
     }
 }

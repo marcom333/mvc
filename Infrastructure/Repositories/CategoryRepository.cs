@@ -17,7 +17,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task<Category> GetCategory(int id)
     {
         Category? category;
-        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido FROM dbo.[User] WHERE UserId = @ID";
+        string sql = @"SELECT CategoryId, Name, Description FROM dbo.Category WHERE CategoryId = @ID";
 
         using (var conn = _dapper.GetConnection())
         {
@@ -27,7 +27,7 @@ public class CategoryRepository : ICategoryRepository
             {
                 try
                 {
-                    user = await conn.QueryFirstOrDefaultAsync<User>(sql, new { ID = id }, tx);
+                    category = await conn.QueryFirstOrDefaultAsync<Category>(sql, new { ID = id }, tx);
                     tx.Commit();
                 }
                 catch { 
@@ -36,14 +36,14 @@ public class CategoryRepository : ICategoryRepository
                 }
             }
 
-            return user != null? user: new User();
+            return category != null? category: new Category();
         }
     }
 
-    public async Task<List<User>> GetUsers()
+    public async Task<List<Category>> GetCategories()
     {
-        List<User>? users;
-        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido FROM dbo.[User]";
+        List<Category>? categories;
+        string sql = @"SELECT CategoryId, Name, Description FROM dbo.Category";
 
         using (var conn = _dapper.GetConnection())
         {
@@ -53,7 +53,7 @@ public class CategoryRepository : ICategoryRepository
             {
                 try
                 {
-                    users = (await conn.QueryAsync<User>(sql, null, tx)).ToList();
+                    categories = (await conn.QueryAsync<Category>(sql, null, tx)).ToList();
                     tx.Commit();
                 }
                 catch { 
@@ -62,14 +62,14 @@ public class CategoryRepository : ICategoryRepository
                 }
             }
 
-            return users;
+            return categories;
         }
     }
 
-    public async Task<bool> CreateUser(User user)
+    public async Task<bool> CreateCategory(Category category)
     {
-        string sql = @"INSERT INTO dbo.[User] (Name, Primer_Apellido, Segundo_Apellido) 
-            Values (@Name, @Primer_Apellido, @Segundo_Apellido) SELECT CAST(SCOPE_IDENTITY() AS INT)";
+        string sql = @"INSERT INTO dbo.Category (Name, Description) 
+            Values (@Name, @Description) SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
         int id = 0;
 
@@ -81,7 +81,7 @@ public class CategoryRepository : ICategoryRepository
             {
                 try
                 {
-                    id = await conn.ExecuteScalarAsync<int>(sql, user, tx);
+                    id = await conn.ExecuteScalarAsync<int>(sql, category, tx);
                     tx.Commit();
                 }
                 catch { 
@@ -94,11 +94,11 @@ public class CategoryRepository : ICategoryRepository
         }        
     }
     
-    public async Task<bool> UpdateUser(User user)
+    public async Task<bool> UpdateCategory(Category category)
     {
         string sql = @"
-            UPDATE dbo.[User] SET Name = @Name, Primer_Apellido = @Primer_Apellido, Segundo_Apellido = @Segundo_Apellido
-            WHERE UserId = @UserId";
+            UPDATE dbo.Category SET Name = @Name, Description = @Description
+            WHERE CategoryId = @CategoryId";
 
         int filas = 0;
 
@@ -110,9 +110,9 @@ public class CategoryRepository : ICategoryRepository
             {
                 try
                 {
-                    filas = await conn.ExecuteAsync(sql, user, tx);
+                    filas = await conn.ExecuteAsync(sql, category, tx);
                     if(filas == 0) {                          
-                        throw new InvalidOperationException("No se actualizó el usuario. Error UpdateUser.");    
+                        throw new InvalidOperationException("No se actualizó la categoria. Error UpdateCategory.");    
                     }
                     tx.Commit();
                 }
@@ -126,10 +126,10 @@ public class CategoryRepository : ICategoryRepository
         }        
     }
     
-    public async Task<bool> DeleteUser(int id)
+    public async Task<bool> DeleteCategory(int id)
     {
         string sql = @"
-            DELETE FROM dbo.[User] WHERE UserId = @ID";
+            DELETE FROM dbo.Category WHERE CategoryId = @ID";
 
         bool eliminado = false;
 

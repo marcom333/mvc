@@ -5,13 +5,11 @@ namespace Application.Interface.Service;
 public interface ICategoryService
 {
     
-    public Task<Category> GetCategory(int id);
+    public Task<Task<Category>> GetCategory(int id);
 
     public Task<List<Category>> GetCategories();
 
     public Task<bool> CreateCategory(Category category);
 
-    public Task<bool> UpdateCategory(Category category);
-
-    public Task<bool> DeleteCategory(Category category);
+    public bool UpdateCategory(Category category);
 }

@@ -109,7 +109,6 @@ public class ProductController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        Console.WriteLine("id:"+id);
         ViewData["nav"] = "product";        
         if (await _productService.DeleteProduct(id))
             TempData["success"] = "El producto fue eliminado Exitosamente!";

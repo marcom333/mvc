@@ -27,9 +27,11 @@ public class ProductController : Controller {
     }
     
     [HttpGet("Detail/{id}")]
-    public IActionResult Detail(int id) {
-        Product? p = _productService.GetProduct(id);
+    public async Task<IActionResult> Detail(int id) {
+        Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
+
+        Console.WriteLine("Category: " + p.CategoryId +" " +p.CategoryName + " " + p.CategoryDescription);
 
         ProductDetailViewModel detail = new();
         detail.Product = p;
@@ -51,41 +53,41 @@ public class ProductController : Controller {
         });
     }
     [HttpPost("Create")]
-    public IActionResult Create(Product p) {
+    public async Task<IActionResult> Create(Product p) {
         if(p.Name == "") return BadRequest();
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
         TempData["status"] = 200;
-        Product product = _productService.CreateProduct(p);
+        Product product = await _productService.CreateProduct(p);
 
         return RedirectToAction("Detail", new {id=product.ProductId});
     }
 
     // Product/Update/123
     [HttpGet("Update/{id}")]
-    public IActionResult Update(int id) {
-        Product? p = _productService.GetProduct(id);
+    public async Task<IActionResult> Update(int id) {
+        Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         return View(p);
     }
     [HttpPost("Update/{id}")]
-    public IActionResult Update(int id, Product p) {
+    public async Task<IActionResult> Update(int id, Product p) {
         p.ProductId = id;
         if(p.Name == "") return BadRequest();
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
-        _productService.UpdateProduct(p);
+        await _productService.UpdateProduct(p);
 
         return RedirectToAction("Detail", "Product", new {id, name="hola", registrado=true});
     }
 
     [HttpPost("Delete/{id}")]
-    public IActionResult Delete(int id) {
-        Product? p = _productService.GetProduct(id);
+    public async Task<IActionResult> Delete(int id) {
+        Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
-        _productService.DeleteProduct(p);
+        await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
     }
 

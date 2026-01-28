@@ -6,6 +6,8 @@
     usuario_id
 */
 
+using System.Dynamic;
+
 namespace Application.Entities;
 
 public class Product {
@@ -15,4 +17,9 @@ public class Product {
     public int Price {get; set;}
     public int CategoryId {get; set;}
     public int UserId {get; set;}
+
+    public Category? Category {get; set;}
+
+    public string? CategoryName {get; set;}
+    public string? CategoryDescription {get; set;}
 }

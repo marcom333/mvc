@@ -1,5 +1,7 @@
 using Application.Interface.Service;
 using Application.Services;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.OutputCaching;
 using Web.Tools;
 
@@ -7,8 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IDapperService,DapperContext>();
 builder.Services.AddTransient<IOutput,Output>();
-builder.Services.AddSingleton<IProductService,ProductService>();
+builder.Services.AddTransient<IProductService,ProductRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

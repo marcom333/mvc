@@ -14,9 +14,9 @@ public class ProductController : Controller
     }
     
     
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View(_productService.GetProducts());
+        return View(await _productService.GetProducts());
     }
 
 
@@ -27,13 +27,13 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Product product)
+    public async Task<IActionResult> Create(Product product)
     {
         if (!ModelState.IsValid)
         {
             return View(product);
         }
-        _productService.CreateProduct(product);
+        await _productService.CreateProduct(product);
         //*Se crea registro en BD*
         return RedirectToAction("Index");
     }
@@ -42,7 +42,7 @@ public class ProductController : Controller
     public async Task<IActionResult> Read(int product_id)
     {
         
-        Product? product = _productService.GetProduct(product_id);
+        Product? product = await _productService.GetProduct(product_id);
         if(product!= null)
         {
             return View(product);
@@ -53,9 +53,9 @@ public class ProductController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult LoadUpdate(int product_id)
+    public async Task<IActionResult> LoadUpdate(int product_id)
     {
-        Product? product = _productService.GetProduct(product_id);
+        Product? product = await _productService.GetProduct(product_id);
         if(product!= null)
         {
             return View("Update",product);
@@ -66,25 +66,25 @@ public class ProductController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Update(Product product)
+    public async Task<IActionResult> Update(Product product)
     {
         if (!ModelState.IsValid)
         {
             return View(product);
         }
-        _productService.UpdateProduct(product);
+        await _productService.UpdateProduct(product);
         return RedirectToAction("Index");
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Delete(int product_id)
+    public async Task<IActionResult> Delete(int product_id)
     {
-        _productService.DeleteProduct(new Product{ProductId = product_id});
+        await _productService.DeleteProduct(new Product{ProductId = product_id});
         return RedirectToAction("Index");
     }
 
-    public IActionResult Detail(int product_id)
+    public async Task<IActionResult> Detail(int product_id)
     {
         if(product_id == 50)
         {
@@ -99,7 +99,7 @@ public class ProductController : Controller
         {
             ViewBag.Warning = "Casi se terminan!!";
         }
-        return View(_productService.GetProduct(product_id));
+        return View(await _productService.GetProduct(product_id));
     }
 
     public ViewResult ViewResult()

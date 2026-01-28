@@ -13,9 +13,13 @@ namespace Web.Controllers;
 public class ProductController : Controller {
 
     private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
+    private readonly IUserService _userService;
 
-    public ProductController(IProductService productService) {
+    public ProductController(IProductService productService, ICategoryService categoryService, IUserService userService) {
         _productService = productService;
+        _categoryService = categoryService;
+        _userService = userService;
     }
     
     // Index
@@ -30,27 +34,13 @@ public class ProductController : Controller {
     public async Task<IActionResult> Detail(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
-
-        Console.WriteLine("Category: " + p.CategoryId +" " +p.CategoryName + " " + p.CategoryDescription);
-
-        ProductDetailViewModel detail = new();
-        detail.Product = p;
-        detail.Category = new Category() {
-            Name = "Verduras",
-            CategoryId = 1
-        };
-        detail.User = new User() {
-            Name = "Juan",
-            UserId = 1
-        };
-        return View(detail);
+        return View(p);
     }
     [HttpGet("Create")]
     public IActionResult Create() { // get por defecto, [HttpGet] si falla
-        return View(new Product() {
-            CategoryId=1,
-            UserId=1
-        });
+        ViewBag.Categories = _categoryService.GetCategorys();
+        ViewBag.Users = _userService.GetUsers();
+        return View(new Product());
     }
     [HttpPost("Create")]
     public async Task<IActionResult> Create(Product p) {
@@ -69,6 +59,8 @@ public class ProductController : Controller {
     public async Task<IActionResult> Update(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
+        ViewBag.Categories = await _categoryService.GetCategorys();
+        ViewBag.Users = await _userService.GetUsers();
         return View(p);
     }
     [HttpPost("Update/{id}")]
@@ -80,7 +72,7 @@ public class ProductController : Controller {
         if(p.UserId == 0) return BadRequest();
         await _productService.UpdateProduct(p);
 
-        return RedirectToAction("Detail", "Product", new {id, name="hola", registrado=true});
+        return RedirectToAction("Detail", "Product", new {id});
     }
 
     [HttpPost("Delete/{id}")]

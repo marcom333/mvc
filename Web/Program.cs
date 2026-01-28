@@ -14,8 +14,14 @@ builder.Services.AddControllersWithViews();
 // builder.Services.AddScoped<IOutput, Output>(); // <== duradero
 builder.Services.AddSingleton<IOutput, Output>();
 builder.Services.AddSingleton<DapperContext>();
-builder.Services.AddSingleton<IProductService, ProductService>();
+
+builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
+
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 

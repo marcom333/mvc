@@ -30,21 +30,6 @@ public class ProductRepository : IProductRepository{
     public async Task<Product?> GetProduct(int id) {
         using IDbConnection con = _context.GetConnection();
         con.Open();
-        // string sql =
-        //     @"SELECT 
-        //         p.ProductId,
-        //         p.Name, 
-        //         p.Price, 
-        //         p.Description, 
-        //         p.UserId, 
-        //         --p.CategoryId,
-        //         c.CategoryId,
-        //         c.Name,
-        //         c.Description
-        //     FROM dbo.Product p
-        //     INNER JOIN dbo.Category c ON
-        //         p.CategoryId = c.CategoryId
-        //     WHERE ProductId = @productId";
             string sql =
                 @"SELECT 
                 p.ProductId,

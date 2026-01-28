@@ -15,7 +15,6 @@ public class ProductController : Controller
         _productService = productService;
         _categoryService = categoryService;
         _userService = userService;
-
     }
 
     [HttpGet]
@@ -46,12 +45,11 @@ public class ProductController : Controller
         return View(detail);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        return View(new Product(){
-            CategoryId = 1,
-            UserId = 1
-        });
+        ViewBag.Categories = await _categoryService.GetCategories();
+        ViewBag.Users = await _userService.GetUsers(null);
+        return View(new ProductCreateViewModel());
     }
 
     [HttpPost]

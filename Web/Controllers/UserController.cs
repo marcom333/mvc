@@ -12,8 +12,10 @@ public class UserController : Controller {
         _userService = productService;
     }
 
-    public async Task<IActionResult> Index() {
-        List<User> users = await _userService.GetUsers();
+    public async Task<IActionResult> Index(string? name) {
+        if(name == "") name = null;
+        ViewBag.SearchName = name;
+        List<User> users = await _userService.GetUsers(name);
         return View(users);
     }
     

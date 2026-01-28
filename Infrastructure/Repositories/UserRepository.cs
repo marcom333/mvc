@@ -17,10 +17,12 @@ public class UserRepository : IUserRepository{
         _context = context;
     }
 
-    public async Task<List<User>> GetUsers() {
+    public async Task<List<User>> GetUsers(string? name) {
         using IDbConnection con = _context.GetConnection();
         con.Open();
-        string query = 
+
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(
             @"SELECT 
                 u.UserId,
                 u.Name, 
@@ -41,10 +43,17 @@ public class UserRepository : IUserRepository{
                 p.UserId = u.UserId
             LEFT JOIN Category c ON
                 c.CategoyId = p.CategoryId
-        ";
+
+            /**where**/
+            /**orderby**/
+        ");
+
+        if(name != null)
+            builder.Where("u.Name = @name", new {name});
+
         Dictionary<int, User> dict = [];
         await con.QueryAsync<User, Product, Category, User>(
-            query,
+            template.RawSql,
             (user, product, category) => {
                 User? current = dict.GetValueOrDefault(user.UserId); 
                 if (current == null) {
@@ -60,7 +69,8 @@ public class UserRepository : IUserRepository{
                 }
                 return user;
             },
-            splitOn: "ProductId,CategoryId"
+            splitOn: "ProductId,CategoryId",
+            param: template.Parameters
         );
         List<User> users = [];
         foreach(KeyValuePair<int, User> u in dict) {

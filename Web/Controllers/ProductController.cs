@@ -39,18 +39,24 @@ public class ProductController : Controller {
     [HttpGet("Create")]
     public async Task<IActionResult> Create() { // get por defecto, [HttpGet] si falla
         ViewBag.Categories = await _categoryService.GetCategorys();
-        ViewBag.Users = await _userService.GetUsers();
-        return View(new Product());
+        ViewBag.Users = await _userService.GetUsers(null);
+        return View(new ProductCreateViewModel());
     }
     [HttpPost("Create")]
-    public async Task<IActionResult> Create(Product p) {
-        if(p.Name == "") return BadRequest();
-        if(p.Price == 0) return BadRequest();
-        if(p.CategoryId == 0) return BadRequest();
-        if(p.UserId == 0) return BadRequest();
-        TempData["status"] = 200;
-        Product product = await _productService.CreateProduct(p);
-
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ProductCreateViewModel p) {
+        if(!ModelState.IsValid){
+            ViewBag.Categories = await _categoryService.GetCategorys();
+            ViewBag.Users = await _userService.GetUsers(null);
+            return View(p);
+        }
+        Product product = await _productService.CreateProduct(new Product() {
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            CategoryId = p.CategoryId,
+            UserId = p.UserId
+        });
         return RedirectToAction("Detail", new {id=product.ProductId});
     }
 
@@ -60,7 +66,7 @@ public class ProductController : Controller {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         ViewBag.Categories = await _categoryService.GetCategorys();
-        ViewBag.Users = await _userService.GetUsers();
+        ViewBag.Users = await _userService.GetUsers(null);
         return View(p);
     }
     [HttpPost("Update/{id}")]

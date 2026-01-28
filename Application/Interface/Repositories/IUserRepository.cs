@@ -4,7 +4,7 @@ using Application.Entities;
 namespace Application.Interface.Repositories;
 
 public interface IUserRepository {
-    public Task<List<User>> GetUsers();
+    public Task<List<User>> GetUsers(string ? name);
     
     public Task<User?> GetUser(int id);
 

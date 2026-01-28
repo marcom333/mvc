@@ -6,8 +6,6 @@
     usuario_id
 */
 
-using System.Dynamic;
-
 namespace Application.Entities;
 
 public class Product {

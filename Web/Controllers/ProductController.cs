@@ -7,10 +7,15 @@ namespace Web.Controllers;
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
+    private readonly IUserService _userService;
 
-    public ProductController(IProductService productService)
+    public ProductController(IProductService productService, ICategoryService categoryService, IUserService userService)
     {
         _productService = productService;
+        _categoryService = categoryService;
+        _userService = userService;
+
     }
 
     [HttpGet]
@@ -26,17 +31,18 @@ public class ProductController : Controller
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
 
-        Console.WriteLine("Category: " + p.CategoryId + " " + p.CategoryName + " " + p.CategoryDescription);
+        Console.WriteLine("Category: " + p.CategoryId + " " + p.CategoryName + " " + p.CategoryDescription + " " );
 
         ProductDetailViewModel detail = new();
         detail.Product = p;
-        detail.Category.CategoryId = p.Category.CategoryId;
-        detail.Category.Name = p.Category.Name;
-        detail.User = new User()
-        {
-            Name = "Josh",
-            UserId = 1
-        };
+        // Como Category? de ProductDetailViewModel puede ser null, entonces deberá asignársele un valor de Categoría 0 por defecto
+        detail.Category.CategoryId = (p.Category != null) ? p.Category.CategoryId : 0; //Si p.Category NO es null; manda  p.Category.CategoryId, si SÍ es null, manda un 0
+        detail.Category.Name = p.Category?.Name ?? "---"; //uso de operador ternario coalesce para p.Category?.Name en caso de ser null, el valor será "---"
+        detail.Category.Description = p.Category?.Description;
+
+        detail.User.UserId = (p.User != null) ? p.UserId : 0;
+        detail.User.Name = p.User?.Name ?? "---";
+
         return View(detail);
     }
 
@@ -81,7 +87,7 @@ public class ProductController : Controller
         return RedirectToAction("Detail", "Product", new{id, name = "hola", registrado=true});
     }
     
-     [HttpPost("Delete/{id}")]
+    [HttpPost("Delete/{id}")]
     public async Task<IActionResult> Delete(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();

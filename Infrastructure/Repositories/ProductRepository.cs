@@ -30,8 +30,23 @@ public class ProductRepository : IProductRepository{
     public async Task<Product?> GetProduct(int id) {
         using IDbConnection con = _context.GetConnection();
         con.Open();
-        string sql =
-            @"SELECT 
+        // string sql =
+        //     @"SELECT 
+        //         p.ProductId,
+        //         p.Name, 
+        //         p.Price, 
+        //         p.Description, 
+        //         p.UserId, 
+        //         --p.CategoryId,
+        //         c.CategoryId,
+        //         c.Name,
+        //         c.Description
+        //     FROM dbo.Product p
+        //     INNER JOIN dbo.Category c ON
+        //         p.CategoryId = c.CategoryId
+        //     WHERE ProductId = @productId";
+            string sql =
+                @"SELECT 
                 p.ProductId,
                 p.Name, 
                 p.Price, 
@@ -40,20 +55,29 @@ public class ProductRepository : IProductRepository{
                 --p.CategoryId,
                 c.CategoryId,
                 c.Name,
-                c.Description
+                c.Description,
+                u.UserId,
+                u.Name
             FROM dbo.Product p
-            INNER JOIN dbo.Category c ON
-                p.CategoryId = c.CategoryId
+            INNER JOIN dbo.Category c ON p.CategoryId = c.CategoryId
+            INNER JOIN dbo.[User] u ON p.UserId = u.UserId
             WHERE ProductId = @productId";
-        return (await con.QueryAsync<Product, Category, Product>(sql, 
-            (p, c) => {
+
+        
+        var products = await con.QueryAsync<Product, Category, User, Product>(sql, (p, c, u) => {
                 p.Category = c;
+                p.User = u;
                 return p;
-            }, 
-            splitOn: "CategoryId",
-            param: new {productId=id}
-        )).First();
+            },
+            splitOn: "CategoryId, UserId",
+            param: new {productId = id}
+        );
+
+        products.ToList().ForEach(product => Console.WriteLine($"Product: {product.Name}, Category: {product.Category?.Name}"));
+        return products.First();
         // return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
+
+
     }
     public async Task DeleteProduct(Product p) {
         using IDbConnection con = _context.GetConnection();

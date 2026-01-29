@@ -1,5 +1,7 @@
+@using Application.Entities
 @using Web.ViewModel
-@model ProductDetailViewModel
+
+@model Product
 
 @if(ViewBag.Error != null){
     <div class="alert alert-warning" role="alert">
@@ -12,27 +14,30 @@
     <div class="card w-100">
         <div class="card-body">
             <h1 class="border-bottom border-2 border-primary">Product details</h1>
+            <p>
+                <a class="btn btn-warning" asp-action="Update" asp-route-id="@Model.ProductId">Edit product</a>
+            </p>
             <table class="table">
                 <tbody>
                     <tr>
                         <th class="w-25">Name</th>
-                        <td>@Model.Product.Name </td>
+                        <td>@Model.Name </td>
                     </tr>
                     <tr>
                         <th class="w-25">Description</th>
-                        <td>@Model.Product.Description</td>
+                        <td>@Model.Description</td>
                     </tr>
                     <tr>
                         <th class="w-25">Price</th>
-                        <td>@Model.Product.Price</td>
+                        <td>@Model.Price</td>
                     </tr>
                     <tr>
                         <th class="w-25">Category</th>
-                        <td>@Model.Category.Name</td>
+                        <td>@Model.Category?.Name</td>
                     </tr>
                     <tr>
                         <th class="w-25">User</th>
-                        <td>@Model.User.Name</td>
+                        <td>@Model.User?.Name</td>
                     </tr>
                     <tr>
                         <th class="w-25">Image</th>

@@ -35,34 +35,34 @@ public class ProductRepository : IProductRepository{
                 p.ProductId,
                 p.Name, 
                 p.Price, 
-                p.Description, 
-                p.UserId, 
-                --p.CategoryId,
-                c.CategoryId,
+                p.Description,
+
+                c.CategoryId, 
                 c.Name,
                 c.Description,
-                u.UserId,
-                u.Name
-            FROM dbo.Product p
-            INNER JOIN dbo.Category c ON p.CategoryId = c.CategoryId
-            INNER JOIN dbo.[User] u ON p.UserId = u.UserId
-            WHERE ProductId = @productId";
 
-        
-        var products = await con.QueryAsync<Product, Category, User, Product>(sql, (p, c, u) => {
+                u.UserId,
+                u.Name,
+                u.Email
+
+            FROM dbo.Product p
+            LEFT JOIN dbo.Category c ON
+                c.CategoryId = p.CategoryId
+            LEFT JOIN dbo.Users u ON
+                u.UserId = P.UserId
+            WHERE ProductId = @productId";
+        return (await con.QueryAsync<Product, Category, User, Product>(sql, 
+            (p, c, u) => {
+                p.CategoryId = c.CategoryId;
+                p.UserId = u.UserId;
                 p.Category = c;
                 p.User = u;
                 return p;
-            },
+            }, 
             splitOn: "CategoryId, UserId",
-            param: new {productId = id}
-        );
-
-        products.ToList().ForEach(product => Console.WriteLine($"Product: {product.Name}, Category: {product.Category?.Name}"));
-        return products.First();
+            param: new {productId=id}
+        )).First();
         // return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
-
-
     }
     public async Task DeleteProduct(Product p) {
         using IDbConnection con = _context.GetConnection();

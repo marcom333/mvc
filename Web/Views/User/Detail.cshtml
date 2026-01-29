@@ -1,0 +1,25 @@
+@using Application.Entities
+@using Web.ViewModel
+
+@model User
+
+<h1>Detalles del usuario</h1>
+
+<p>
+    <a class="btn btn-warning" asp-action="Update" asp-route-id="@Model.UserId">Editar</a> <br>
+</p>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>Name</th>
+            <td>
+                @Model.Name <br>
+            </td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>@Model.Email</td>
+        </tr>
+    </tbody>
+</table>

@@ -29,20 +29,7 @@ public class ProductController : Controller
     {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
-
-        Console.WriteLine("Category: " + p.CategoryId + " " + p.CategoryName + " " + p.CategoryDescription + " " );
-
-        ProductDetailViewModel detail = new();
-        detail.Product = p;
-        // Como Category? de ProductDetailViewModel puede ser null, entonces deberá asignársele un valor de Categoría 0 por defecto
-        detail.Category.CategoryId = (p.Category != null) ? p.Category.CategoryId : 0; //Si p.Category NO es null; manda  p.Category.CategoryId, si SÍ es null, manda un 0
-        detail.Category.Name = p.Category?.Name ?? "---"; //uso de operador ternario coalesce para p.Category?.Name en caso de ser null, el valor será "---"
-        detail.Category.Description = p.Category?.Description;
-
-        detail.User.UserId = (p.User != null) ? p.UserId : 0;
-        detail.User.Name = p.User?.Name ?? "---";
-
-        return View(detail);
+        return View(p);
     }
 
     public async Task<IActionResult> Create()
@@ -53,23 +40,47 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Product p){
-        if(p.Name == "") return BadRequest();
-        if(p.Price == 0) return BadRequest();
-        if(p.CategoryId == 0) return BadRequest();
-        if(p.UserId == 0) return BadRequest();
-
-        TempData["status"] = 200;
-        Product product = await _productService.CreateProduct(p);
-
-        return RedirectToAction("Detail", new {id = product.ProductId});
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(ProductCreateViewModel p){
+        if(!ModelState.IsValid){
+            ViewBag.Categories = await _categoryService.GetCategories();
+            ViewBag.Users = await _userService.GetUsers(null);
+            return View(p);
+        }
+        Product product = await _productService.CreateProduct(new Product() {
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            CategoryId = p.CategoryId,
+            UserId = p.UserId
+        });
+        return RedirectToAction("Detail", new {id=product.ProductId});
     }
+
+    // [HttpGet]
+    // public async Task<IActionResult> Update(int id){
+    //     Product? p = await _productService.GetProduct(id);
+    //     if(p == null) return NotFound();
+    //     ViewBag.Categories = await _categoryService.GetCategories();
+    //     ViewBag.Users = await _userService.GetUsers(null);
+    //     return View(p);
+    // }
 
     [HttpGet]
     public async Task<IActionResult> Update(int id){
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
-        return View(p);
+        ProductCreateViewModel pvm = new()
+        {
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            CategoryId = p.CategoryId,
+            UserId = p.UserId
+        };
+        ViewBag.Categories = await _categoryService.GetCategories();
+        ViewBag.Users = await _userService.GetUsers(null);
+        return View(pvm);
     }
 
     [HttpPost]
@@ -82,7 +93,7 @@ public class ProductController : Controller
         if(p.UserId == 0) return BadRequest();
         await _productService.UpdateProduct(p);
 
-        return RedirectToAction("Detail", "Product", new{id, name = "hola", registrado=true});
+        return RedirectToAction("Detail", "Product", new{id});
     }
     
     [HttpPost("Delete/{id}")]
@@ -96,6 +107,11 @@ public class ProductController : Controller
     
     
     
+    
+
+
+
+
     
     
     

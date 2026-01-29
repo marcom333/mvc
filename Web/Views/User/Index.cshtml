@@ -1,0 +1,59 @@
+@{
+    if(ViewBag.user != null)
+        Layout = "~/Views/Shared/_Plantilla.cshtml";
+    ViewData["Title"] = "Productos";
+}
+
+@using Application.Entities
+
+@model List<User>
+
+@if(ViewBag.Error!=null){
+    <div class="alert alert-danger" role="alert">
+        <strong>danger</strong> @ViewBag.Error
+    </div>
+}
+
+<div class="d-flex rounded">
+    <div class="card w-100 bg-secondary-subtle">
+        <div class="card-body">
+            <a asp-action="Create" asp-controller="User" class="btn btn-success mb-3">
+                Register
+            </a>
+            <div class="bg-success-subtle px-2 pb-1 rounded border border-success">
+                <form action="">
+                    <div class="form-group">
+                        <label for="">Search Name 🔍</label>
+                        <input type="text" class="form-control" name="name" value="@ViewBag.SearchName">
+                    </div>
+                    <button type="submit" class="btn btn-success mt-1">Buscar</button>
+                </form>
+
+                <table class="table table-striped table-bordered table-success table-hover mt-3">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        @foreach(User u in Model){
+                            <tr>
+                                <td>@u.Name</td>
+                                <td>@u.Email</td>
+                                <td>
+                                    <a asp-action="Detail" asp-controller="User" asp-route-id="@u.UserId" class="btn btn-primary">Consultar</a>
+                                    <a asp-action="Update" asp-controller="User" asp-route-id="@u.UserId" class="btn btn-warning">Editar</a>
+                                    <form asp-action="Delete" asp-route-id="@u.UserId" method="post">
+                                        <input type="submit" class="btn btn-danger" value="Borrar">
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

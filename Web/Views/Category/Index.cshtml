@@ -1,17 +1,16 @@
 @{
-    if(ViewBag.user != null){ //Código que quedó con un if de prueba para simular permisos de usuarios
-        //Cargar una plantilla diferente a _Layout.cshtml
+    if(ViewBag.user != null)
         Layout = "~/Views/Shared/_Plantilla.cshtml";
-    }
     ViewData["Title"] = "Productos";
 }
 
 @using Application.Entities
-@model List<Product>
 
-@if(ViewBag.Error != null){
+@model List<Category>
+
+@if(ViewBag.Error!=null){
     <div class="alert alert-danger" role="alert">
-        Este producto está agotado.
+        <strong>danger</strong> @ViewBag.Error
     </div>
 }
 
@@ -31,16 +30,17 @@
                         </tr>
                     </thead>
                     <tbody class="table-group-divider">
-                        @foreach(Product p in Model){
+                        @foreach(Category c in Model){
                             <tr>
-                                <td>@p.Name</td>
-                                <td>@p.Price</td>
+                                <td>@c.Name</td>
+                                <td>@c.Description</td>
                                 <td>
-                                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@p.CategoryId" class="btn btn-primary">Get details</a>
-                                    <a asp-action="Update" asp-controller="Product" asp-route-id="@p.CategoryId" class="btn btn-warning">Edit</a>
-                                    <a asp-action="Delete" asp-controller="Product" asp-route-id="@p.CategoryId" class="btn btn-danger">Delete</a>
+                                    <a asp-action="Detail" asp-controller="Category" asp-route-id="@c.CategoryId" class="btn btn-primary">Consultar</a>
+                                    <a asp-action="Update" asp-controller="Category" asp-route-id="@c.CategoryId" class="btn btn-warning">Editar</a>
+                                    <form asp-action="Delete" asp-route-id="@c.CategoryId" method="post">
+                                        <input type="submit" class="btn btn-danger" value="Borrar">
+                                    </form>
                                 </td>
-                                
                             </tr>
                         }
                     </tbody>

@@ -6,6 +6,7 @@ using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Web.Filters;
 using Web.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,14 @@ builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<RecordSnapshotRepo>();
+
+builder.Services.AddTransient<IAuthorizationHandler, IsAdminHandler>();
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy(IsAdminRequirement.PolicyName, policy => {
+        policy.Requirements.Add(new IsAdminRequirement());
+    });
+});
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
     options.LoginPath = "/Account/Login";

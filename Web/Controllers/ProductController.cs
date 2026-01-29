@@ -5,6 +5,7 @@ using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 using Web.ViewModel;
 
 namespace Web.Controllers;
@@ -65,12 +66,19 @@ public class ProductController : Controller {
 
     // Product/Update/123
     [HttpGet("Update/{id}")]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Update(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         ViewBag.Categories = await _categoryService.GetCategorys();
         ViewBag.Users = await _userService.GetUsers(null);
-        return View(p);
+        return View(new ProductCreateViewModel() {
+            Name = p.Name,
+            CategoryId = p.CategoryId,
+            Description = p.Description,
+            Price = p.Price,
+            UserId = p.UserId
+        });
     }
     [HttpPost("Update/{id}")]
     public async Task<IActionResult> Update(int id, Product p) {

@@ -10,6 +10,7 @@ namespace Web.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly Record _repo;
 
     public HomeController(ILogger<HomeController> logger, IOutput output1, IOutput output2)
     {

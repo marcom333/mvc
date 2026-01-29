@@ -1,6 +1,8 @@
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 using Web.ViewModel;
 namespace Web.Controllers;
 
@@ -18,6 +20,7 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    // [Authorize]
     public async Task<IActionResult> Index()
     {
         if(TempData["error"] != null)
@@ -57,16 +60,8 @@ public class ProductController : Controller
         return RedirectToAction("Detail", new {id=product.ProductId});
     }
 
-    // [HttpGet]
-    // public async Task<IActionResult> Update(int id){
-    //     Product? p = await _productService.GetProduct(id);
-    //     if(p == null) return NotFound();
-    //     ViewBag.Categories = await _categoryService.GetCategories();
-    //     ViewBag.Users = await _userService.GetUsers(null);
-    //     return View(p);
-    // }
-
     [HttpGet]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Update(int id){
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();

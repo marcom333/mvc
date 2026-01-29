@@ -33,4 +33,9 @@ public class UserService : IUserService
     public async Task DeleteUser(User User) {
         await _userRepository.DeleteUser(User);
     }
+
+    public async Task<User?> GetUserByEmail(string email)
+    {
+        return await _userRepository.GetUserByEmail(email);
+    }
 }

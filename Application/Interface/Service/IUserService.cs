@@ -8,4 +8,5 @@ public interface IUserService
     public Task<List<User>> GetUsers(string? name);
     public Task UpdateUser(User user);
     public Task DeleteUser(User user);
+    public Task<User?> GetUserByEmail(string email);
 }

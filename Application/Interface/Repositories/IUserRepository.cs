@@ -8,4 +8,5 @@ public interface IUserRepository{
     public Task<List<User>> GetUsers(string? name);
     public Task UpdateUser(User u);
     public Task DeleteUser(User u);
+    public Task<User?> GetUserByEmail(string email);
 }

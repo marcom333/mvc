@@ -1,6 +1,7 @@
 using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.Tools;
 
 namespace Web.Controllers;
 
@@ -22,6 +23,7 @@ public class UserController : Controller {
     public async Task<IActionResult> Detail(int id) {
         User? p = await _userService.GetUser(id);
         if(p == null) return NotFound();
+        p.Password = "";
         return View(p);
     }
     
@@ -30,13 +32,13 @@ public class UserController : Controller {
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(User p) {
-        if(p.Name == "") return BadRequest();
-        if(p.Password == "") return BadRequest();
-        if(p.Email == "") return BadRequest();
-        TempData["status"] = 200;
-        User product = await _userService.CreateUser(p);
-        return RedirectToAction("Detail", new {id=product.UserId});
+    public async Task<IActionResult> Create(int id, User user) {
+        if(user.Name == "") return BadRequest();
+        if(user.Password == "") return BadRequest();
+        if(user.Email == "") return BadRequest();
+        user.Password = Hasher.Hash(user);
+        User product = await _userService.CreateUser(user);
+        return RedirectToAction("Detail", new {id=user.UserId});
     }
 
     public async Task<IActionResult> Update(int id) {
@@ -46,12 +48,13 @@ public class UserController : Controller {
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(int id, User p) {
-        p.UserId = id;
-        if(p.Name == "") return BadRequest();
-        if(p.Password == "") return BadRequest();
-        if(p.Email == "") return BadRequest();
-        await _userService.UpdateUser(p);
+    public async Task<IActionResult> Update(int id, User user) {
+        user.UserId = id;
+        if(user.Name == "") return BadRequest();
+        if(user.Password == "") return BadRequest();
+        if(user.Email == "") return BadRequest();
+        user.Password = Hasher.Hash(user);
+        await _userService.UpdateUser(user);
         return RedirectToAction("Detail", "User", new {id, name="hola", registrado=true});
     }
 

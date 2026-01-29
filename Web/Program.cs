@@ -6,6 +6,7 @@ using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Web.Filters;
 using Web.Tools;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,8 @@ builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddSingleton<DapperContext>();
 
+builder.Services.AddTransient<IAuthorizationHandler, IsAdminHandler>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -38,6 +41,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromHours(24);
         options.SlidingExpiration = true;
     });
+
+builder.Services.AddAuthorization(options => {
+    options.AddPolicy(IsAdminRequirement.PolicyName, policy => {
+        policy.Requirements.Add(new IsAdminRequirement());
+    });
+});
 
 var app = builder.Build();
 

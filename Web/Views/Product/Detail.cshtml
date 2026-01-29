@@ -1,6 +1,17 @@
 @using Application.Entities
+@using Web.ViewModel
 
-@model Product
+@model ProductDetailViewModel
+
+<h1>Detalle del Producto</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Update" asp-rute-id="1">Editar</a>
+    @Html.ActionLink(linkText:"Registrar", actionName:"Crear")<br />
+    @Html.ActionLink(linkText: "Home", actionName: "Index", controllerName:"Home")
+    @Html.ActionLink(linkText: "Editar",actionName: "Update",routeValues: new { q = 1 },
+        htmlAttributes: new { @class = "btn btn-success", style = "text-align: center" })
+</p>
 
 @if(ViewBag.Warning != null){
     <div class="alert alert-warning" role="alert">
@@ -17,23 +28,24 @@
     <tbody>
         <tr>
             <th>Name</th>
-            <td>@Model.Name</td>
+            <td>@Html.Raw(Model.Product.Name)
+            @Html.Encode(Model.Product.Name)</td>
         </tr>
         <tr>
             <th>Description</th>
-            <td>@Model.Description</td>
+            <td>@Model.Product.Description</td>
         </tr>
         <tr>
             <th>Price</th>
-            <td>@Model.Price</td>
+            <td>@Model.Product.Price</td>
         </tr>
         <tr>
             <th>Category</th>
-            <td>@Model.CategoryId</td>
+            <td>@Model.Category.Name</td>
         </tr>
         <tr>
             <th>User</th>
-            <td>@Model.UserId</td>
+            <td>@Model.User.Name</td>
         </tr>
     </tbody>
 </table>

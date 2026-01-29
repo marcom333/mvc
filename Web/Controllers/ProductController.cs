@@ -1,94 +1,104 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Entities;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Web.ViewModel;
+using Application.Interface.Services;
 
 namespace Web.Controllers;
 
 public class ProductController : Controller
 {
     
-    public IActionResult Index()
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        List<Product> products = [];
+        _productService = productService;
+    }
+    [HttpGet("Index")]
+    public async Task<IActionResult> Index()
+    {
 
         if(TempData["error"] != null)
         {
             ViewBag.Error = "No existen mas productos de esa categoria";
         }
 
-        for(int i = 0; i<10; i++)
-        {
-            products.Add(new()
-            {
-                Name = "Prodcut #"+i
-            });
-        }
-        return View(products);
+        
+        return View(await _productService.GetProducts());
     }
-
+    [HttpGet("Detail/{id}")]
     public IActionResult Detail(int id)
     {
-        ViewBag.status = TempData["status"] ?? 0;
-        if(id == 50){
-            TempData["error"] = true;
-            return RedirectToAction("Index");
-        }
-        if(id == 100)
+        Product? p = _productService.GetProduct(id);
+
+        if(p == null) return NotFound();
+
+        ProductDetailViewModel detail = new();
+        detail.Product = p;
+        detail.Category = new Category()
         {
-            return NotFound();
-        }
-        if(id == 5)
+            Name = "Verduras",
+            CategoryId = 1
+
+        };
+        detail.User = new User()
         {
-            ViewBag.Warning = "Caso se termina!";
-        }
+            UserId = 1,
+            Name = "Juan Perez"
+        };
+        return View(detail);
+        
+    }
+    [HttpGet("Create")]
+    public IActionResult Create()
+    {
         return View(new Product()
         {
-            Name = "Detail product" + id,
-            Description = "Test product",
-            Price = 1,
             CategoryId = 1,
             UserId = 1
         });
-        
     }
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
-    [HttpPost]
+    [HttpPost("Create")]
     public IActionResult Create(Product p)
     {
         if(p.Name == "") return BadRequest();
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
+        TempData["status"] = 200;
+        Product product = _productService.CreateProduct(p);
 
-        return RedirectToAction("Detail", new{id=1});
+        return RedirectToAction("Detail", new{id=product.ProductId});
     }
 
-    [HttpGet]
+    [HttpGet("Update/{id}")]
     public IActionResult Update(int id){
-        if(id == 100) return NotFound();
-        return View(new Product()
-        {
-            Name = "Detalle Producto "+ id,
-            Description = "Test Product",
-            Price = 1,
-            CategoryId = 1,
-            UserId = 1
-        });
+        Product? p = _productService.GetProduct(id);
+
+        if (p == null) return NotFound();
+        return View(p);
     }
-    [HttpPost]
+    [HttpPost("Update/{id}")]
     public IActionResult Update(int id,Product p)
     {
-        if(id == 100) return NotFound();
+        p.ProductId = id;
+        if (id == 100) return NotFound();
         if(p.Name == "") return BadRequest();
         if(p.Price == 0) return BadRequest();
         if(p.CategoryId == 0) return BadRequest();
         if(p.UserId == 0) return BadRequest();
 
+        _productService.UpdateProduct(p);
+
         return RedirectToAction("Index", "Home", new{id, name="hola", registrado=true});
+    }
+    [HttpPost("Delete/{id}")]
+    public IActionResult Delete(int id)
+    {
+        Product? p = _productService.GetProduct(id);
+        if (p == null) return NotFound();
+        _productService.DeleteProduct(p);
+        return RedirectToAction("Index");
     }
 
     public ViewResult ViewResult()

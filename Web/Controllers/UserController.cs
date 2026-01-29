@@ -1,9 +1,12 @@
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Tools;
 
 namespace Web.Controllers;
 
+// [Authorize]
 public class UserController : Controller {
 
     private readonly IUserService _userService;
@@ -35,13 +38,15 @@ public class UserController : Controller {
         if(p.Password == "") return BadRequest();
         if(p.Email == "") return BadRequest();
         TempData["status"] = 200;
-        User product = await _userService.CreateUser(p);
-        return RedirectToAction("Detail", new {id=product.UserId});
+        p.Password = Hasher.Hash(p);
+        User user = await _userService.CreateUser(p);
+        return RedirectToAction("Detail", new {id=user.UserId});
     }
 
     public async Task<IActionResult> Update(int id) {
         User? p = await _userService.GetUser(id);
         if(p == null) return NotFound();
+        p.Password = "";
         return View(p);
     }
 
@@ -51,6 +56,7 @@ public class UserController : Controller {
         if(p.Name == "") return BadRequest();
         if(p.Password == "") return BadRequest();
         if(p.Email == "") return BadRequest();
+        p.Password = Hasher.Hash(p);
         await _userService.UpdateUser(p);
         return RedirectToAction("Detail", "User", new {id, name="hola", registrado=true});
     }

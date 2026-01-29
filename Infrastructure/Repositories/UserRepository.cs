@@ -167,10 +167,25 @@ public class UserRepository : IUserRepository{
         string sql = 
             @"UPDATE dbo.Users SET
                 Name = @Name, 
-                Password = @Password
+                Password = @Password,
+                Email = @Email
             WHERE UserId = @UserId";
         int count = await con.ExecuteAsync(sql, p);
         Console.WriteLine(count);
+    }
+
+    public async Task<User?> GetUserByEmail(string email) {
+        using IDbConnection con = _context.GetConnection();
+        con.Open();
+        string sql =
+            @"SELECT 
+                u.UserId,
+                u.Name, 
+                u.Email, 
+                u.Password
+            FROM dbo.Users u
+            WHERE u.Email = @email";
+        return (await con.QueryAsync<User>(sql, new {email})).FirstOrDefault();
     }
 
 }

@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.ViewModel;
 
@@ -10,6 +11,7 @@ namespace Web.Controllers;
 
 // Product/
 [Route("Product")]
+// [Authorize]
 public class ProductController : Controller {
 
     private readonly IProductService _productService;
@@ -24,6 +26,7 @@ public class ProductController : Controller {
     
     // Index
     [HttpGet("Index")]
+    // [AllowAnonymous]
     public async Task<IActionResult> Index() {
         if(TempData["error"] != null)
             ViewBag.Error = "No existen más productos de esa categoría";

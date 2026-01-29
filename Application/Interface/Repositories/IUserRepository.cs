@@ -13,4 +13,6 @@ public interface IUserRepository {
     public Task<User> CreateUser(User u);
 
     public Task UpdateUser(User u);
+
+    public Task<User?> GetUserByEmail(string email);
 }

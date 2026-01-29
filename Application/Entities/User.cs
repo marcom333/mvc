@@ -14,6 +14,12 @@ public class User
 
     [Required(ErrorMessage = "El segundo apellido es Obligatorio.")]
     public string Segundo_Apellido { get; set; }
+
+    [Required(ErrorMessage = "El correo electrónico es Obligatorio.")]
+    public string Email { get; set; }
+
+    [Required(ErrorMessage = "La Contraseña es Obligatoria.")]
+    public string Contraseña { get; set; }
     
     public string NombreCompleto =>
         $"{Name} {Primer_Apellido} {Segundo_Apellido}";

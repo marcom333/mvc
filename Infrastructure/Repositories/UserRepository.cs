@@ -153,4 +153,31 @@ public class UserRepository : IUserRepository
             return eliminado;
         }        
     }
+
+    public async Task<User> GetUserByEmail(string email)
+    {
+        
+        User? user;
+        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido, Email, Password FROM dbo.[User] WHERE Email = @Email";
+
+        using (var conn = _dapper.GetConnection())
+        {
+            conn.Open();
+
+            using (var tx = conn.BeginTransaction())
+            {
+                try
+                {
+                    user = await conn.QueryFirstOrDefaultAsync<User>(sql, new { Email = email }, tx);
+                    tx.Commit();
+                }
+                catch { 
+                    tx.Rollback();
+                    throw;
+                }
+            }
+
+            return user != null? user: new User();
+        }
+    }
 }

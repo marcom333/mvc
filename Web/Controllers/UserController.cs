@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
+using Web.Tools;
 
 namespace Web.Controllers;
 
@@ -37,6 +38,8 @@ public class UserController : Controller
             return View("Create", user);
         }
 
+        user.Contraseña = Hasher.Hash(user);
+
         if (await _userService.CreateUser(user))
             TempData["success"] = "El usuario fue registrado Exitosamente!";
         else
@@ -63,7 +66,10 @@ public class UserController : Controller
             return RedirectToAction(nameof(Index));
         }
 
-        return View(await _userService.GetUser(id));        
+        User user = await _userService.GetUser(id);
+        user.Contraseña = "";
+
+        return View(user);        
     }
 
     [HttpPost]
@@ -75,6 +81,8 @@ public class UserController : Controller
             TempData["error"] = "El usuario no fue actualizado!";
             return View("Edit", user);
         }
+
+        user.Contraseña = Hasher.Hash(user);
         
         if (await _userService.UpdateUser(user))
             TempData["success"] = "El usuario fue actualizado Exitosamente!";

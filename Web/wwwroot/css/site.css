@@ -23,6 +23,9 @@ html {
 body {
   margin-bottom: 60px;
   font-family: 'Poppins' !important;
+  background-image: url('/img/tecno.webp');
+    background-size: auto;
+    background-position: center;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {

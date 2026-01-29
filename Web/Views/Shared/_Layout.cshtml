@@ -39,30 +39,32 @@
                                 Inicio
                             </a>
                         </li>
-                        <li class="nav-item @GetActiveClass("product")">
-                            <a class="nav-link d-flex align-items-center @GetActiveClass("product")" asp-area="" asp-controller="Product" asp-action="Index">                                
-                                <span class="material-symbols-outlined me-1">
-                                    package_2
-                                </span>
-                                Productos
-                            </a>
-                        </li>
-                        <li class="nav-item @GetActiveClass("user")">
-                            <a class="nav-link d-flex align-items-center @GetActiveClass("user")" asp-area="" asp-controller="User" asp-action="Index">                                
-                                <span class="material-symbols-outlined me-1">
-                                    group
-                                </span>
-                                Usuarios
-                            </a>
-                        </li>
-                        <li class="nav-item @GetActiveClass("category")">
-                            <a class="nav-link d-flex align-items-center @GetActiveClass("category")" asp-area="" asp-controller="Category" asp-action="Index">                                
-                                <span class="material-symbols-outlined me-1">
-                                    category
-                                </span>
-                                Categorias
-                            </a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated == true){
+                            <li class="nav-item @GetActiveClass("product")">
+                                <a class="nav-link d-flex align-items-center @GetActiveClass("product")" asp-area="" asp-controller="Product" asp-action="Index">                                
+                                    <span class="material-symbols-outlined me-1">
+                                        package_2
+                                    </span>
+                                    Productos
+                                </a>
+                            </li>
+                            <li class="nav-item @GetActiveClass("user")">
+                                <a class="nav-link d-flex align-items-center @GetActiveClass("user")" asp-area="" asp-controller="User" asp-action="Index">                                
+                                    <span class="material-symbols-outlined me-1">
+                                        group
+                                    </span>
+                                    Usuarios
+                                </a>
+                            </li>
+                            <li class="nav-item @GetActiveClass("category")">
+                                <a class="nav-link d-flex align-items-center @GetActiveClass("category")" asp-area="" asp-controller="Category" asp-action="Index">                                
+                                    <span class="material-symbols-outlined me-1">
+                                        category
+                                    </span>
+                                    Categorias
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item @GetActiveClass("privacy")">
                             <a class="nav-link d-flex align-items-center @GetActiveClass("privacy")" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <span class="material-symbols-outlined me-1">
@@ -71,6 +73,30 @@
                                 Privacidad
                             </a>
                         </li>
+                    </ul>
+                              
+                    <ul class="navbar-nav text-light">   
+                        @if (User.Identity?.IsAuthenticated == true){
+                            <span class="navbar-text text-light"> @User.Identity.Name</span>
+                            <li class="nav-item">
+                                <a class="nav-link text-light"  asp-action="Logout" asp-controller="Account">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+                                        <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <p class="nav-item">
+                                <a class="nav-link text-light"  asp-action="Login" asp-controller="Account">Iniciar Sesión</a>
+                            </p>
+                        }
+                        
+                        @* <li class="nav-item @GetActiveClass("account")">
+                            <a class="nav-link @GetActiveClass("account")" asp-action="Login" asp-controller="Account">Login</a>
+                        </li> *@
                     </ul>
                 </div>
             </div>
@@ -91,7 +117,7 @@
 
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
-    
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>

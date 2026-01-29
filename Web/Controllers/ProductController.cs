@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.ViewModels;
 
 namespace Web.Controllers;
 
+//[Authorize]
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
@@ -45,24 +47,22 @@ public class ProductController : Controller
         ViewData["nav"] = "product";
         if (!ModelState.IsValid)
         {
-            Console.WriteLine("console loggin of errors");
-            foreach (var key in ModelState.Keys)
-            {
-                var state = ModelState[key];
-                if (state.Errors.Count > 0)
-                {
-                    Console.WriteLine($"Campo con error: {key}");
-                    foreach (var error in state.Errors)
-                    {
-                        Console.WriteLine($" - Error: {error.ErrorMessage}");
-                    }
-                }
-            }
+            product.categories = await _categoryService.GetCategories();
+            product.users = await _userService.GetUsers();
             TempData["error"] = "El producto no fue almacenado!";
             return View("Create", product);
         }
 
-        if (await _productService.CreateProduct(product))
+        Product p = new Product()
+        {
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            CategoryId = product.CategoryId,
+            UserId = product.UserId
+        };
+
+        if (await _productService.CreateProduct(p))
             TempData["success"] = "El producto fue almacenado Exitosamente!";
         else
             TempData["error"] = "Ocurrio un error. El producto no fue almacenado!";
@@ -76,17 +76,10 @@ public class ProductController : Controller
         ViewData["nav"] = "product";
 
         Product product = await _productService.GetProduct(id);
+        product.ProductCategory = await _categoryService.GetCategory(product.CategoryId?? 0);
+        product.ProductUser = await _userService.GetUser(product.UserId?? 0);
 
-        ProductViewModel model = new ProductViewModel();
-        model.ProductId = product.ProductId;
-        model.Name = product.Name;
-        model.Description = product.Description;
-        model.Price = product.Price;
-        model.ProductCategory = await _categoryService.GetCategory(product.CategoryId?? 0);
-        model.ProductUser = await _userService.GetUser(product.UserId?? 0);
-        model.UserId = product.UserId;
-
-        return View(model);
+        return View(product);
     }
 
     [HttpGet("Product/Edit/{id:int}")]
@@ -101,31 +94,44 @@ public class ProductController : Controller
         
         Product product = await _productService.GetProduct(id);
         
-        ProductViewModel model = new ProductViewModel();
-        model.ProductId = product.ProductId;
-        model.Name = product.Name;
-        model.Description = product.Description;
-        model.Price = product.Price;
-        model.UserId = product.UserId;
-        model.CategoryId = product.CategoryId;
-
-        model.categories = await _categoryService.GetCategories();
-        model.users = await _userService.GetUsers();
+        ProductViewModel model = new ProductViewModel()
+        {
+            ProductId = product.ProductId,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            UserId = product.UserId,
+            CategoryId = product.CategoryId,
+            categories = await _categoryService.GetCategories(),
+            users = await _userService.GetUsers(),
+        };
 
         return View(model);        
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(Product product)
+    public async Task<IActionResult> Update(ProductViewModel product)
     {
         ViewData["nav"] = "product";
         if (!ModelState.IsValid)
         {
+            product.categories = await _categoryService.GetCategories();
+            product.users = await _userService.GetUsers();
             TempData["error"] = "El producto no fue actualizado!";
             return View("Edit", product);
         }
         
-        if (await _productService.UpdateProduct(product))
+        Product p = new Product()
+        {
+            ProductId = product.ProductId,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            CategoryId = product.CategoryId,
+            UserId = product.UserId
+        };
+
+        if (await _productService.UpdateProduct(p))
         {
             TempData["success"] = "El producto fue actualizado Exitosamente!";
             return RedirectToAction(nameof(Index));
@@ -148,4 +154,20 @@ public class ProductController : Controller
         
         return RedirectToAction(nameof(Index));
     }
+
+    //Logging errors
+    // Console.WriteLine("console loggin of errors");
+    // foreach (var key in ModelState.Keys)
+    // {
+    //     var state = ModelState[key];
+    //     if (state?.Errors.Count > 0)
+    //     {
+    //         Console.WriteLine($"Campo con error: {key}");
+    //         foreach (var error in state.Errors)
+    //         {
+    //             Console.WriteLine($" - Error: {error.ErrorMessage}");
+    //         }
+    //     }
+    // }
+
 }

@@ -13,4 +13,6 @@ public interface IUserRepository
     public Task<bool> UpdateUser(User user);
     
     public Task<bool> DeleteUser(int id);
+
+    public Task<User> GetUserByEmail(string email);
 }

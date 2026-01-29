@@ -21,8 +21,8 @@ public class UserService : IUserService {
         return await _userRepository.GetUser(id);
     }
 
-    public async Task<List<User>> GetUsers() {
-        return await _userRepository.GetUsers();
+    public async Task<List<User>> GetUsers(string? name) {
+        return await _userRepository.GetUsers(name);
     }
 
     public async Task UpdateUser(User user) {

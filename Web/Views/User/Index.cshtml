@@ -19,6 +19,14 @@
     <a class="btn btn-success" asp-action="Create" asp-controller="User">Registrar</a>
 </p>
 
+<form action="">
+    <div class="form-group">
+        <label for="">Nombre</label>
+        <input type="text" class="form-control" name="name" value="@ViewBag.SearchName">
+    </div>
+    <button type="submit" class="btn btn-success">Buscar</button>
+</form>
+
 <table class="table table-bordered table-hover table-striped">
     <thead>
         <tr>

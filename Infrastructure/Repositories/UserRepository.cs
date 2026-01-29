@@ -17,10 +17,12 @@ public class UserRepository : IUserRepository{
         _context = context;
     }
 
-    public async Task<List<User>> GetUsers() {
+    public async Task<List<User>> GetUsers(string? name) {
         using IDbConnection con = _context.GetConnection();
         con.Open();
-        string query = 
+
+        var builder = new SqlBuilder();
+        var template = builder.AddTemplate(
             @"SELECT 
                 u.UserId,
                 u.Name, 
@@ -41,10 +43,17 @@ public class UserRepository : IUserRepository{
                 p.UserId = u.UserId
             LEFT JOIN Category c ON
                 c.CategoyId = p.CategoryId
-        ";
+
+            /**where**/
+            /**orderby**/
+        ");
+
+        if(name != null)
+            builder.Where("u.Name = @name", new {name});
+
         Dictionary<int, User> dict = [];
-        IEnumerable<User> users = await con.QueryAsync<User, Product, Category, User>(
-            query,
+        await con.QueryAsync<User, Product, Category, User>(
+            template.RawSql,
             (user, product, category) => {
                 User? current = dict.GetValueOrDefault(user.UserId); 
                 if (current == null) {
@@ -53,12 +62,20 @@ public class UserRepository : IUserRepository{
                 }
                 if(product != null) {
                     product.Category = category;
+                    product.CategoryId = category.CategoryId; 
+                    product.User = current;
+                    product.UserId = current.UserId;
+                    current.Products.Add(product);
                 }
                 return user;
             },
-            splitOn: "ProductId,CategoryId"
+            splitOn: "ProductId,CategoryId",
+            param: template.Parameters
         );
-
+        List<User> users = [];
+        foreach(KeyValuePair<int, User> u in dict) {
+            users.Add(u.Value);
+        }
 
         return users.ToList();
     }
@@ -97,21 +114,24 @@ public class UserRepository : IUserRepository{
                 c.CategoyId = p.CategoryId
             WHERE u.UserId = @id";
         User? outputUser = null;
-        User users = con.Query<User, Product, Category, User>(
+        User users = (await con.QueryAsync<User, Product, Category, User>(
             sql,
             (user, product, category) =>{
                 if (outputUser == null)
                     outputUser = user;
                 if (product != null){
-                    product.Category = category; 
+                    product.Category = category;
+                    product.CategoryId = category.CategoryId; 
+                    product.User = outputUser;
+                    product.UserId = outputUser.UserId;
                     outputUser.Products.Add(product);
                 }
                 return outputUser;
             },
             new { id },
             splitOn: "ProductId,CategoryId"
-        ).First();
-        return users;
+        )).First();
+        return outputUser;
     }
     public async Task DeleteUser(User p) {
         using IDbConnection con = _context.GetConnection();

@@ -36,15 +36,6 @@
             <span asp-validation-for="CategoryId" class="text-danger"></span>
         </div>
     </div>
-    <div class="mb-3">
-        <div class="col-12">
-            <label asp-for="UserId" class="form-label">Usuario *:</label>
-            <select asp-for="UserId" class="form-select form-select-sm" asp-items="@(new SelectList(Model.users, "UserId", "NombreCompleto"))">
-                <option value="">---Selecciona un Usuario---</option>
-            </select>
-            <span asp-validation-for="UserId" class="text-danger"></span>
-        </div>
-    </div>
     <hr>
     <div class="col-12">
         <button type="submit" class="btn btn-success">Actualizar</button>

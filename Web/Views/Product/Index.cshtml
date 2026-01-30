@@ -19,7 +19,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-
 <div class="text-left">
     
     <div class="card">
@@ -30,15 +29,18 @@
                 </span>
                 Productos
             </h2>
-            <hr>
-            <div class="col-12 mb-3">
-                <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
-                    <span class="material-symbols-outlined me-1">
-                        add
-                    </span>
-                    Nuevo Producto
-                </a>
-            </div>
+            
+            @if (User.Identity?.IsAuthenticated == true){
+                <hr>
+                <div class="col-12 mb-3">
+                    <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
+                        <span class="material-symbols-outlined me-1">
+                            add
+                        </span>
+                        Nuevo Producto
+                    </a>
+                </div>
+            }
             <hr>
             <table class="table text-center">
                 <thead>
@@ -62,19 +64,21 @@
                                 <td>$ @producto.Price</td>
                                 <td>@(producto.ProductCategory?.Name?? "---")</td>
                                 <td>@(producto.ProductUser != null? producto.ProductUser.Name+" "+producto.ProductUser.Primer_Apellido+" "+producto.ProductUser.Segundo_Apellido: "---" )</td>
-                                <td>
-                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@producto.ProductId" class="btn btn-success d-inline-flex align-items-center action-btn" 
-                                    data-toggle="tooltip" data-placement="top" title="Editar Producto">
-                                        <span class="material-symbols-outlined me-1">
-                                            edit_document
-                                        </span>
-                                    </a>
-                                    <a class="btn btn-danger d-inline-flex align-items-center action-btn btnDelete" data-toggle="tooltip" data-placement="top" 
-                                    title="Eliminar Producto" data-id="@producto.ProductId" data-name="@producto.Name">
-                                        <span class="material-symbols-outlined me-1">
-                                            delete
-                                        </span>
-                                    </a>                          
+                                <td>                                    
+                                    @if (User.Identity?.IsAuthenticated == true){
+                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@producto.ProductId" class="btn btn-success d-inline-flex align-items-center action-btn" 
+                                        data-toggle="tooltip" data-placement="top" title="Editar Producto">
+                                            <span class="material-symbols-outlined me-1">
+                                                edit_document
+                                            </span>
+                                        </a>
+                                        <a class="btn btn-danger d-inline-flex align-items-center action-btn btnDelete" data-toggle="tooltip" data-placement="top" 
+                                        title="Eliminar Producto" data-id="@producto.ProductId" data-name="@producto.Name">
+                                            <span class="material-symbols-outlined me-1">
+                                                delete
+                                            </span>
+                                        </a>         
+                                    }                 
                                     <a asp-controller="Product" asp-action="Details" asp-route-id="@producto.ProductId" class="btn btn-light d-inline-flex align-items-center action-btn" 
                                     data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
                                         <span class="material-symbols-outlined me-1">
@@ -86,7 +90,7 @@
                         }
                     }else{
                         <tr>
-                            <td class="text-muted" colspan="3">
+                            <td class="text-muted" colspan="7">
                                 No hay productos para mostrar
                                 <br>
                                 <img src="~/img/empty.png" alt="" width="300" height="250" style="opacity: 0.65;">
@@ -99,36 +103,37 @@
     </div>
 </div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title d-flex align-items-center" id="deleteModalLabel">
-                    <span class="material-symbols-outlined me-1" style="color: red !important; font-size: 35px;">
-                        delete
-                    </span>
-                    Eliminar Registro de Producto
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-danger-subtle text-center" id="deleteModalBody">
-                ¿Esta seguro que desea eliminar el registro del producto <span id="productoNombre" style="font-weight: bold;"></span>?
-            </div>
-            <div class="modal-footer">
-                <form asp-action="Delete" method="post" style="display:inline;">
-                    <input type="hidden" id="productId" name="id" value="" />
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash-alt me-1"></i> Eliminar
+@if (User.Identity?.IsAuthenticated == true){
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title d-flex align-items-center" id="deleteModalLabel">
+                        <span class="material-symbols-outlined me-1" style="color: red !important; font-size: 35px;">
+                            delete
+                        </span>
+                        Eliminar Registro de Producto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-danger-subtle text-center" id="deleteModalBody">
+                    ¿Esta seguro que desea eliminar el registro del producto <span id="productoNombre" style="font-weight: bold;"></span>?
+                </div>
+                <div class="modal-footer">
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" id="productId" name="id" value="" />
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Eliminar
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cerrar
                     </button>
-                </form>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times me-1"></i>Cerrar
-                </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
+}
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -151,21 +156,23 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        $('.btnDelete').on('click', function(e){
-            e.preventDefault();
-            var id = $(this).data('id');
-            if(id){
-                $('#productoNombre').html($(this).data('name'));
-                $('#productId').val(id);
+@if (User.Identity?.IsAuthenticated == true){
+    @section Scripts {
+        <script>
+            $('.btnDelete').on('click', function(e){
+                e.preventDefault();
+                var id = $(this).data('id');
+                if(id){
+                    $('#productoNombre').html($(this).data('name'));
+                    $('#productId').val(id);
 
-                console.log("id script:"+id);
+                    console.log("id script:"+id);
 
-                $('#deleteModal').modal('show');
-            }else{
-                $('#errorModal').modal('show');
-            }
-        });
-    </script>
+                    $('#deleteModal').modal('show');
+                }else{
+                    $('#errorModal').modal('show');
+                }
+            });
+        </script>
+    }
 }

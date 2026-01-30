@@ -3,11 +3,11 @@ using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Web.Filters;
 using Web.ViewModels;
 
 namespace Web.Controllers;
 
-//[Authorize]
 public class ProductController : Controller
 {
     private readonly IProductService _productService;
@@ -23,6 +23,7 @@ public class ProductController : Controller
         _userService = userService;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         ViewData["nav"] = "product";
@@ -32,6 +33,7 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    [Authorize(IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Create()
     {
         ViewData["nav"] = "product";
@@ -42,10 +44,11 @@ public class ProductController : Controller
     }
 
     [HttpPost]
+    [Authorize(IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Store(ProductViewModel product)
     {
         ViewData["nav"] = "product";
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || GetUserId() == 0)
         {
             product.categories = await _categoryService.GetCategories();
             product.users = await _userService.GetUsers();
@@ -59,7 +62,7 @@ public class ProductController : Controller
             Description = product.Description,
             Price = product.Price,
             CategoryId = product.CategoryId,
-            UserId = product.UserId
+            UserId = GetUserId(),
         };
 
         if (await _productService.CreateProduct(p))
@@ -71,6 +74,7 @@ public class ProductController : Controller
     }
     
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Details(int id)
     {
         ViewData["nav"] = "product";
@@ -83,6 +87,7 @@ public class ProductController : Controller
     }
 
     [HttpGet("Product/Edit/{id:int}")]
+    [Authorize(IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Edit(int id)
     {    
         ViewData["nav"] = "product";
@@ -100,7 +105,6 @@ public class ProductController : Controller
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
-            UserId = product.UserId,
             CategoryId = product.CategoryId,
             categories = await _categoryService.GetCategories(),
             users = await _userService.GetUsers(),
@@ -110,10 +114,11 @@ public class ProductController : Controller
     }
 
     [HttpPost]
+    [Authorize(IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Update(ProductViewModel product)
     {
         ViewData["nav"] = "product";
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || GetUserId() == 0)
         {
             product.categories = await _categoryService.GetCategories();
             product.users = await _userService.GetUsers();
@@ -128,7 +133,7 @@ public class ProductController : Controller
             Description = product.Description,
             Price = product.Price,
             CategoryId = product.CategoryId,
-            UserId = product.UserId
+            UserId = GetUserId(),
         };
 
         if (await _productService.UpdateProduct(p))
@@ -144,6 +149,7 @@ public class ProductController : Controller
     }
     
     [HttpPost]
+    [Authorize(IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Delete(int id)
     {
         ViewData["nav"] = "product";        
@@ -155,6 +161,11 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+
+    private int GetUserId()
+    {
+        return int.TryParse(User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value, out var id)? id : 0;
+    }
     //Logging errors
     // Console.WriteLine("console loggin of errors");
     // foreach (var key in ModelState.Keys)

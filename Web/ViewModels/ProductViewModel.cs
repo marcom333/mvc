@@ -20,9 +20,6 @@ public class ProductViewModel
     [Required(ErrorMessage = "La categoría es Obligatoria.")]
     public int? CategoryId {get; set;}
 
-    [Required(ErrorMessage = "El usuario es Obligatorio.")]
-    public int? UserId {get; set;}
-
     public List<Category>? categories = new List<Category>();
 
     public List<User>? users = new List<User>();

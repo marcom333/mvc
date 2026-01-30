@@ -54,7 +54,6 @@ public class ProductRepository : IProductRepository
         using (var conn = _dapper.GetConnection())
         {
             conn.Open();
-
             products = (await conn.QueryAsync<Product, Category, User, Product>(sql,
                 (p, c, u) =>
                 {

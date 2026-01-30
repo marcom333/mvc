@@ -68,8 +68,8 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> CreateUser(User user)
     {
-        string sql = @"INSERT INTO dbo.[User] (Name, Primer_Apellido, Segundo_Apellido) 
-            Values (@Name, @Primer_Apellido, @Segundo_Apellido) SELECT CAST(SCOPE_IDENTITY() AS INT)";
+        string sql = @"INSERT INTO dbo.[User] (Name, Primer_Apellido, Segundo_Apellido, Email, Contraseña) 
+            Values (@Name, @Primer_Apellido, @Segundo_Apellido, @Email, @Contraseña) SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
         int id = 0;
 
@@ -97,7 +97,7 @@ public class UserRepository : IUserRepository
     public async Task<bool> UpdateUser(User user)
     {
         string sql = @"
-            UPDATE dbo.[User] SET Name = @Name, Primer_Apellido = @Primer_Apellido, Segundo_Apellido = @Segundo_Apellido
+            UPDATE dbo.[User] SET Name = @Name, Primer_Apellido = @Primer_Apellido, Segundo_Apellido = @Segundo_Apellido, Email = @Email, Contraseña = @Contraseña
             WHERE UserId = @UserId";
 
         int filas = 0;
@@ -158,7 +158,7 @@ public class UserRepository : IUserRepository
     {
         
         User? user;
-        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido, Email, Password FROM dbo.[User] WHERE Email = @Email";
+        string sql = @"SELECT UserId, Name, Primer_Apellido, Segundo_Apellido, Email, Contraseña FROM dbo.[User] WHERE Email = @Email";
 
         using (var conn = _dapper.GetConnection())
         {

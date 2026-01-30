@@ -4,7 +4,7 @@ namespace Application.Interface.Service;
 
 public interface IProductService
 {
-    public Task<Product> GetProduct(int id);
+    public Task<Product?> GetProduct(int id);
 
     public Task<List<Product>> GetProducts();
 

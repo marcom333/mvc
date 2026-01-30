@@ -20,6 +20,10 @@ public class ProductViewModel
     [Required(ErrorMessage = "La categoría es Obligatoria.")]
     public int? CategoryId {get; set;}
 
+    public FormFile? ImageFile { get; set; }
+
+    public string? ImagePath { get; set; }
+
     public List<Category>? categories = new List<Category>();
 
     public List<User>? users = new List<User>();

@@ -14,7 +14,7 @@ public class ProductRepository : IProductRepository
         _dapper = dapper;
     }
 
-    public async Task<Product> GetProduct(int id)
+    public async Task<Product?> GetProduct(int id)
     {
         Product? product;
         string sql = @"SELECT ProductId, CategoryId, UserId, Name, Description, Price FROM dbo.Product WHERE ProductId = @ID";
@@ -36,7 +36,7 @@ public class ProductRepository : IProductRepository
                 }
             }
 
-            return product != null? product: new Product();
+            return product;
         }
     }
 

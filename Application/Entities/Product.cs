@@ -22,6 +22,7 @@ public class Product
     [Required(ErrorMessage = "El usuario es Obligatorio.")]
     public int? UserId {get; set;}
 
+    public string? ImagePath { get; set; }
     
     public Category? ProductCategory {get; set;}
 

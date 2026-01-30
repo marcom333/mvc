@@ -14,16 +14,16 @@ public class ProductService : IProductService
         _productRepository = productRepository;
     }
 
-    public async Task<Product> GetProduct(int id)
+    public async Task<Product?> GetProduct(int id)
     {
         try
         {
             Product? product = await _productRepository.GetProduct(id);
-            return product != null? product: new Product();
+            return product;
         }catch(Exception ex)
         {
             Console.WriteLine($"Ocurrio un error al guardar el producto: {ex}");
-            return new Product();
+            return null;
         }
     }
 

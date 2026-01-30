@@ -33,7 +33,7 @@ public class ProductController : Controller
     }
 
     [HttpGet]
-    [Authorize(IsAdminRequirement.PolicyName)]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Create()
     {
         ViewData["nav"] = "product";
@@ -44,7 +44,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    [Authorize(IsAdminRequirement.PolicyName)]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Store(ProductViewModel product)
     {
         ViewData["nav"] = "product";
@@ -56,12 +56,15 @@ public class ProductController : Controller
             return View("Create", product);
         }
 
+        // string? imagePath = product.ImageFile != null? SaveAndPath(): null;
+
         Product p = new Product()
         {
             Name = product.Name,
             Description = product.Description,
             Price = product.Price,
             CategoryId = product.CategoryId,
+            // ImagePath = imagePath,
             UserId = GetUserId(),
         };
 
@@ -79,15 +82,19 @@ public class ProductController : Controller
     {
         ViewData["nav"] = "product";
 
-        Product product = await _productService.GetProduct(id);
+        Product? product = await _productService.GetProduct(id);
+        if (product == null)
+        {
+            return RedirectToAction("Error", "Home");
+        }
         product.ProductCategory = await _categoryService.GetCategory(product.CategoryId?? 0);
         product.ProductUser = await _userService.GetUser(product.UserId?? 0);
 
-        return View(product);
+        return PartialView(product);
     }
 
     [HttpGet("Product/Edit/{id:int}")]
-    [Authorize(IsAdminRequirement.PolicyName)]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Edit(int id)
     {    
         ViewData["nav"] = "product";
@@ -114,7 +121,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    [Authorize(IsAdminRequirement.PolicyName)]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Update(ProductViewModel product)
     {
         ViewData["nav"] = "product";
@@ -149,7 +156,7 @@ public class ProductController : Controller
     }
     
     [HttpPost]
-    [Authorize(IsAdminRequirement.PolicyName)]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Delete(int id)
     {
         ViewData["nav"] = "product";        
@@ -161,11 +168,41 @@ public class ProductController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    public async Task<IActionResult> GetDetailsAjax(int id)
+    {
+
+        return View();
+    }
 
     private int GetUserId()
     {
         return int.TryParse(User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value, out var id)? id : 0;
     }
+
+    // private string? SaveAndPath(FormFile file, )
+    // {        
+    //     if (file == null || file.Length == 0)
+    //         return null;
+
+    //     var fileName = Path.GetRandomFileName() + Path.GetExtension(file.FileName);
+    //     var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
+
+    //     if (!Directory.Exists(uploadPath))
+    //     {
+    //         Directory.CreateDirectory(uploadPath);
+    //     }
+
+    //     var filePath = Path.Combine("wwwroot/uploads/temp-froala", fileName);
+
+    //     using (var stream = new FileStream(filePath, FileMode.Create))
+    //     {
+    //         await file.CopyToAsync(stream);
+    //     }
+
+    //     return Json(new { link = $"/uploads/temp-froala/{fileName}" });
+    // }
+
+
     //Logging errors
     // Console.WriteLine("console loggin of errors");
     // foreach (var key in ModelState.Keys)

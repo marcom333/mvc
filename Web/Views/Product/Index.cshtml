@@ -1,4 +1,5 @@
 ﻿@using Application.Entities;
+@using System.Runtime.InteropServices.Marshalling
 @model Web.ViewModels.ProductIndexViewModel;
 
 @{
@@ -19,89 +20,108 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-<div class="text-left">
-    
-    <div class="card">
-        <div class="card-body">
-            <h2 class="d-flex align-items-center">
-                <span class="material-symbols-outlined me-1" style="font-size: 40px;">
-                    package_2
-                </span>
-                Productos
-            </h2>
-            
-            @if (User.Identity?.IsAuthenticated == true){
-                <hr>
-                <div class="col-12 mb-3">
-                    <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
-                        <span class="material-symbols-outlined me-1">
-                            add
+
+<div class="row">
+    <div class="col-6">
+        <div class="text-left">    
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="d-flex align-items-center">
+                        <span class="material-symbols-outlined me-1" style="font-size: 40px;">
+                            package_2
                         </span>
-                        Nuevo Producto
-                    </a>
-                </div>
-            }
-            <hr>
-            <table class="table text-center">
-                <thead>
-                    <tr>
-                        <th style="width: 5%;">Store</th>
-                        <th style="width: 20%;">Nombre</th>
-                        <th style="width: 20%;">Descripción</th>
-                        <th style="width: 15%;">Precio</th>
-                        <th style="width: 10%;">Categoría</th>
-                        <th style="width: 15%;">Usuario</th>
-                        <th style="width: 15%;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(Model.Products.Count() > 0){
-                        @foreach(Product producto in Model.Products){
-                            <tr>
-                                <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
-                                <td>@producto.Name</td>
-                                <td>@producto.Description</td>
-                                <td>$ @producto.Price</td>
-                                <td>@(producto.ProductCategory?.Name?? "---")</td>
-                                <td>@(producto.ProductUser != null? producto.ProductUser.Name+" "+producto.ProductUser.Primer_Apellido+" "+producto.ProductUser.Segundo_Apellido: "---" )</td>
-                                <td>                                    
-                                    @if (User.Identity?.IsAuthenticated == true){
-                                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@producto.ProductId" class="btn btn-success d-inline-flex align-items-center action-btn" 
-                                        data-toggle="tooltip" data-placement="top" title="Editar Producto">
-                                            <span class="material-symbols-outlined me-1">
-                                                edit_document
-                                            </span>
-                                        </a>
-                                        <a class="btn btn-danger d-inline-flex align-items-center action-btn btnDelete" data-toggle="tooltip" data-placement="top" 
-                                        title="Eliminar Producto" data-id="@producto.ProductId" data-name="@producto.Name">
-                                            <span class="material-symbols-outlined me-1">
-                                                delete
-                                            </span>
-                                        </a>         
-                                    }                 
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@producto.ProductId" class="btn btn-light d-inline-flex align-items-center action-btn" 
-                                    data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
-                                        <span class="material-symbols-outlined me-1">
-                                            visibility
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    }else{
-                        <tr>
-                            <td class="text-muted" colspan="7">
-                                No hay productos para mostrar
-                                <br>
-                                <img src="~/img/empty.png" alt="" width="300" height="250" style="opacity: 0.65;">
-                            </td>
-                        </tr>
+                        Productos
+                    </h2>
+                    
+                    @if (User.Identity?.IsAuthenticated == true){
+                        <hr>
+                        <div class="col-12 mb-3">
+                            <a asp-controller="Product" asp-action="Create" class="btn btn-primary d-inline-flex align-items-center">                    
+                                <span class="material-symbols-outlined me-1">
+                                    add
+                                </span>
+                                Nuevo Producto
+                            </a>
+                        </div>
                     }
-                </tbody>
-            </table>    
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">Store</th>
+                                    <th style="width: 20%;">Nombre</th>
+                                    <th style="width: 15%;">Precio</th>
+                                    <th style="width: 15%;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model.Products.Count() > 0){
+                                    @foreach(Product producto in Model.Products){
+                                        <tr>
+                                            <td><img src="~/img/awesome-face-png-1.png" alt="" width="25" height="25"></td>
+                                            <td>@producto.Name</td>
+                                            <td>$ @producto.Price</td>
+                                            <td>                                    
+                                                @if (User.Identity?.IsAuthenticated == true){
+                                                    <a asp-controller="Product" asp-action="Edit" asp-route-id="@producto.ProductId" class="btn btn-success d-inline-flex align-items-center action-btn" 
+                                                    data-toggle="tooltip" data-placement="top" title="Editar Producto">
+                                                        <span class="material-symbols-outlined me-1">
+                                                            edit_document
+                                                        </span>
+                                                    </a>
+                                                    <a class="btn btn-danger d-inline-flex align-items-center action-btn btnDelete" data-toggle="tooltip" data-placement="top" 
+                                                    title="Eliminar Producto" data-id="@producto.ProductId" data-name="@producto.Name">
+                                                        <span class="material-symbols-outlined me-1">
+                                                            delete
+                                                        </span>
+                                                    </a>         
+                                                }                 
+                                                @* <a asp-controller="Product" asp-action="Details" asp-route-id="@producto.ProductId" class="btn btn-light d-inline-flex align-items-center action-btn" 
+                                                data-toggle="tooltip" data-placement="top" title="Detalles Producto" style="border: 1px solid;">
+                                                    <span class="material-symbols-outlined me-1">
+                                                        visibility
+                                                    </span>
+                                                </a> *@
+                                                <a class="btn btn-light action-btn" id="btnConsultar" data-id="@producto.ProductId" onclick="detalle(@producto.ProductId)" style="border: 1px solid;">
+                                                    <span class="material-symbols-outlined me-1">
+                                                        visibility
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }else{
+                                    <tr>
+                                        <td class="text-muted" colspan="4">
+                                            No hay productos para mostrar
+                                            <br>
+                                            <img src="~/img/empty.png" alt="" width="300" height="250" style="opacity: 0.65;">
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>  
+                    </div>  
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="col-6" id="contenido">
+        
+        <div class="text-left">    
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <strong>info</strong> Seleccione un Producto
+                    </div>
+                </div>
+            </div>
+    </div>
+
 </div>
+
 
 @if (User.Identity?.IsAuthenticated == true){
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -156,23 +176,35 @@
     </div>
 </div>
 
-@if (User.Identity?.IsAuthenticated == true){
-    @section Scripts {
-        <script>
-            $('.btnDelete').on('click', function(e){
-                e.preventDefault();
-                var id = $(this).data('id');
-                if(id){
-                    $('#productoNombre').html($(this).data('name'));
-                    $('#productId').val(id);
+@section Scripts {
+    <script>
+        $('.btnDelete').on('click', function(e){
+            e.preventDefault();
+            var id = $(this).data('id');
+            if(id){
+                $('#productoNombre').html($(this).data('name'));
+                $('#productId').val(id);
 
-                    console.log("id script:"+id);
+                console.log("id script:"+id);
 
-                    $('#deleteModal').modal('show');
-                }else{
-                    $('#errorModal').modal('show');
-                }
+                $('#deleteModal').modal('show');
+            }else{
+                $('#errorModal').modal('show');
+            }
+        });
+
+        @* $('#btnConsultar').on('click', function(){
+            console.log("jquery!");
+            var id = this.data('id');
+            detalle(id);
+        }); *@
+
+        function detalle(id){
+            console.log("detalle:"+1);
+
+            $.get("@Url.Action("Details", new { id = 0})".replace("0", id), (data) => {
+                $("#contenido").html(data);
             });
-        </script>
-    }
+        }
+    </script>
 }

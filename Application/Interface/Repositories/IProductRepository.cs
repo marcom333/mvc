@@ -4,7 +4,7 @@ namespace Application.Interface.Repositories;
 
 public interface IProductRepository
 {
-    public Task<Product> GetProduct(int id);
+    public Task<Product?> GetProduct(int id);
 
     public Task<List<Product>> GetProducts();
 

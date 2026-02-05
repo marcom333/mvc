@@ -1,9 +1,12 @@
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Tools;
+
 namespace Web.Controllers;
 
+// [Authorize]
 public class UserController : Controller {
 
     private readonly IUserService _userService;
@@ -35,7 +38,6 @@ public class UserController : Controller {
         if(p.Password == "") return BadRequest();
         if(p.Email == "") return BadRequest();
         TempData["status"] = 200;
-        p.Password = Hasher.Hash(p);
         User product = await _userService.CreateUser(p);
         return RedirectToAction("Detail", new {id=product.UserId});
     }

@@ -1,40 +1,52 @@
-
-
-using System.Threading.Tasks;
 using Application.Entities;
 using Application.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Web.Filters;
 using Web.ViewModel;
 
 namespace Web.Controllers;
 
 // Product/
 [Route("Product")]
+// [Authorize]
 public class ProductController : Controller {
 
     private readonly IProductService _productService;
     private readonly ICategoryService _categoryService;
     private readonly IUserService _userService;
+    private readonly IMemoryCache _memoryCache;
 
-    public ProductController(IProductService productService, ICategoryService categoryService, IUserService userService) {
+    public ProductController(IProductService productService, ICategoryService categoryService, IUserService userService, IMemoryCache memoryCache) {
         _productService = productService;
         _categoryService = categoryService;
         _userService = userService;
+        _memoryCache = memoryCache;
     }
     
     // Index
     [HttpGet("Index")]
+    // [AllowAnonymous]
     public async Task<IActionResult> Index() {
         if(TempData["error"] != null)
             ViewBag.Error = "No existen más productos de esa categoría";
-        return View(await _productService.GetProducts());
+        if(!_memoryCache.TryGetValue("products", out List<Product> products)) {
+            products = await _productService.GetProducts();
+            int longvar = 300000;
+            while(longvar-- != 0){}
+            _memoryCache.Set("products", products, TimeSpan.FromMinutes(5));
+        }
+        return View(products);
     }
     
-    [HttpGet("Detail/{id}")]
+    [HttpGet("Detail/{id}", Name ="ProductDetails")]
+    [ResponseCache(Duration = 60, VaryByQueryKeys = new[] {"id"})]
     public async Task<IActionResult> Detail(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
-        return View(p);
+        p.Name += " " + DateTime.Now;
+        return PartialView(p);
     }
     [HttpGet("Create")]
     public async Task<IActionResult> Create() { // get por defecto, [HttpGet] si falla
@@ -62,12 +74,19 @@ public class ProductController : Controller {
 
     // Product/Update/123
     [HttpGet("Update/{id}")]
+    [Authorize(Policy = IsAdminRequirement.PolicyName)]
     public async Task<IActionResult> Update(int id) {
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         ViewBag.Categories = await _categoryService.GetCategorys();
         ViewBag.Users = await _userService.GetUsers(null);
-        return View(p);
+        return PartialView(new ProductCreateViewModel() {
+            Name = p.Name,
+            CategoryId = p.CategoryId,
+            Description = p.Description,
+            Price = p.Price,
+            UserId = p.UserId
+        });
     }
     [HttpPost("Update/{id}")]
     public async Task<IActionResult> Update(int id, Product p) {
@@ -78,7 +97,7 @@ public class ProductController : Controller {
         if(p.UserId == 0) return BadRequest();
         await _productService.UpdateProduct(p);
 
-        return RedirectToAction("Detail", "Product", new {id});
+        return RedirectToAction("Index", "Product", new {id});
     }
 
     [HttpPost("Delete/{id}")]
@@ -87,40 +106,5 @@ public class ProductController : Controller {
         if(p == null) return NotFound();
         await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
-    }
-
-    public ViewResult ViewResult() {
-        return View();
-    }
-
-    public JsonResult JsonResult() {
-        return Json(new {
-            Name="Hello",
-            Date = DateTime.Now
-        });
-    }
-
-    public RedirectResult RedirectResult() {
-        return Redirect("http://www.google.com");
-    }
-
-    public RedirectToActionResult RedirectToActionResult() {
-        return RedirectToAction("Index", "Home", new {Id=1});
-    }
-
-    public ContentResult ContentResult() {
-        return Content("Hello world");
-    }
-
-    public NotFoundResult NotFoundResult() {
-        return NotFound();
-    }
-
-    public OkObjectResult OkObjectResult() {
-        return Ok(new {}); // 200
-    }
-
-    public BadRequestResult BadRequestResult() {
-        return BadRequest(); //400
     }
 }

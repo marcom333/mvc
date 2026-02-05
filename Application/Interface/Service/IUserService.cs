@@ -12,4 +12,6 @@ public interface IUserService {
     public Task UpdateUser(User model);
     public Task DeleteUser(User model);
 
+    public Task<User?> GetUserByEmail(string email);
+
 }

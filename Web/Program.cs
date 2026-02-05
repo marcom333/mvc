@@ -35,11 +35,16 @@ builder.Services.AddTransient<RecordSnapshotRepo>();
 
 builder.Services.AddTransient<IAuthorizationHandler, IsAdminHandler>();
 
+builder.Services.AddScoped<ActionFilter>();
+builder.Services.AddScoped<ResultFilter>();
+
 builder.Services.AddAuthorization(options => {
     options.AddPolicy(IsAdminRequirement.PolicyName, policy => {
         policy.Requirements.Add(new IsAdminRequirement());
     });
 });
+
+builder.Services.AddResponseCaching();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
     options.LoginPath = "/Account/Login";
@@ -53,7 +58,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error/500");
+    app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -62,6 +68,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseResponseCaching();
 
 app.MapStaticAssets();
 

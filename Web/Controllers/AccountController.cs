@@ -29,6 +29,7 @@ public class AccountController: Controller {
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromForm] string Email, [FromForm] string Password) {
+        
         Application.Entities.User? user = await _userService.GetUserByEmail(Email);
 
         if (user != null && Hasher.Verify(user, Password)) {

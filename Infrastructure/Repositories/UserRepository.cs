@@ -114,7 +114,7 @@ public class UserRepository : IUserRepository{
                 c.CategoyId = p.CategoryId
             WHERE u.UserId = @id";
         User? outputUser = null;
-        User users = (await con.QueryAsync<User, Product, Category, User>(
+        User? users = (await con.QueryAsync<User, Product, Category, User>(
             sql,
             (user, product, category) =>{
                 if (outputUser == null)
@@ -130,7 +130,7 @@ public class UserRepository : IUserRepository{
             },
             new { id },
             splitOn: "ProductId,CategoryId"
-        )).First();
+        )).FirstOrDefault();
         return outputUser;
     }
     public async Task DeleteUser(User p) {

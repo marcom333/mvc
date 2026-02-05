@@ -34,7 +34,7 @@ public class UserRepository : IUserRepository{
                 p.Description,
                 p.Price,
 
-                c.CategoyId as CategoryId,
+                c.CategoryId,
                 c.Name, 
                 c.Description
             FROM 
@@ -42,7 +42,7 @@ public class UserRepository : IUserRepository{
             LEFT JOIN Product p ON
                 p.UserId = u.UserId
             LEFT JOIN Category c ON
-                c.CategoyId = p.CategoryId
+                c.CategoryId = p.CategoryId 
 
             /**where**/
             /**orderby**/
@@ -104,7 +104,7 @@ public class UserRepository : IUserRepository{
                 p.Description,
                 p.Price,
 
-                c.CategoyId as CategoryId,
+                c.CategoryId,
                 c.Name, 
                 c.Description
             FROM dbo.Users u

@@ -23,7 +23,7 @@ public class CategoryRepository : ICategoryRepository{
         con.Open();
         string query = 
             @"SELECT 
-                CategoyId as CategoryId,
+                CategoryId,
                 Name, 
                 Description
             FROM 
@@ -37,7 +37,7 @@ public class CategoryRepository : ICategoryRepository{
         con.Open();
         string sql =
             @"SELECT 
-                c.CategoyId as CategoryId,
+                c.CategoryId,
                 c.Name, 
                 c.Description
             FROM dbo.Category c
@@ -81,7 +81,7 @@ public class CategoryRepository : ICategoryRepository{
             @"UPDATE dbo.Category SET
                 Name = @Name, 
                 Description = @Description
-            WHERE CategoyId = @CategoryId";
+            WHERE CategoryId = @CategoryId";
         int count = await con.ExecuteAsync(sql, p);
         Console.WriteLine(count);
     }

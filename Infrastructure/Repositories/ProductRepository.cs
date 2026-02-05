@@ -52,7 +52,7 @@ public class ProductRepository : IProductRepository{
                 p.Price, 
                 p.Description,
 
-                c.CategoyId as CategoryId, 
+                c.CategoryId, 
                 c.Name,
                 c.Description,
 
@@ -62,7 +62,7 @@ public class ProductRepository : IProductRepository{
 
             FROM dbo.Product p
             LEFT JOIN dbo.Category c ON
-                c.CategoyId = p.CategoryId
+            c.CategoryId = p.CategoryId
             LEFT JOIN dbo.Users u ON
                 u.UserId = P.UserId
             WHERE ProductId = @productId";

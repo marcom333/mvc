@@ -15,8 +15,9 @@ public class IsAdminHandler : AuthorizationHandler<IsAdminRequirement> {
 
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdminRequirement requirement) {
         // _userService.GetUserByEmail();
-        
-        if(context.User.Identity.Name.Equals("admin"))
+        if(context.User.Identity == null)
+            context.Fail();
+        if(context.User.Identity != null && context.User.Identity.Name != null && context.User.Identity.Name.Equals("admin"))
             context.Succeed(requirement);
         else
             context.Fail();

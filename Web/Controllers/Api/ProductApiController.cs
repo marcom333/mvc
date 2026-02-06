@@ -26,11 +26,7 @@ public class ProductApiController : ControllerBase{
     public async Task<IActionResult> Detail(int id) {
         Product ? p = await _productService.GetProduct(id);
         if(p != null)
-            return Ok(new {
-                p.Name,
-                p.Price,
-                p.Description
-            });
+            return Ok(p);
         return NotFound();
     }
 
@@ -49,4 +45,34 @@ public class ProductApiController : ControllerBase{
         else
             return BadRequest(ModelState);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, ProductCreateViewModel p) {
+        if (ModelState.IsValid) {
+            Product product = new Product() {
+                    ProductId = id,
+                    Name = p.Name,
+                    CategoryId = p.CategoryId,
+                    Description = p.Description,
+                    Price = p.Price,
+                    UserId = p.UserId
+                };
+            await _productService.UpdateProduct(product);
+            return Ok(new {status="ok", msg="La actualización fue exitosa", obj=product});
+        }
+        else
+            return BadRequest(ModelState);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id) {
+        Product? p = await _productService.GetProduct(id);
+        if(p == null)
+            return NotFound();
+        
+        await _productService.DeleteProduct(p);
+        return Ok(ApiResponseViewModel.Ok("Se ha eliminado con exito", p));
+    }
+
+
 }

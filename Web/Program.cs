@@ -1,6 +1,7 @@
 using Application.Interface.Repositories;
 using Application.Interface.Service;
 using Application.Services;
+using DotNetEnv;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,7 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Web.Filters;
 using Web.Tools;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
+Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,7 +21,14 @@ builder.Services.AddControllersWithViews(options => {
     var policy = new AuthorizationPolicyBuilder().
                     RequireAuthenticatedUser().
                     Build();
-    // options.Filters.Add(new AuthorizeFilter(policy));
+    
+    options.Conventions.Add(new AuthorizeControllerModelConvention("Web.Controllers.Web", policy));
+
+    var policyApi = new AuthorizationPolicyBuilder().
+                    RequireAuthenticatedUser().
+                    AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).
+                    Build();
+    options.Conventions.Add(new AuthorizeControllerModelConvention("Web.Controllers.Api", policyApi));
 });
 
 // builder.Services.AddTransient<IOutput, Output>(); // <== nuevo cada que se usa
@@ -46,11 +58,21 @@ builder.Services.AddAuthorization(options => {
 
 builder.Services.AddResponseCaching();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => {
+var obj = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+obj.AddCookie(options => {
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
     options.ExpireTimeSpan = TimeSpan.FromDays(31);
     // options.SlidingExpiration = true;
+});
+obj.AddJwtBearer(options => {
+    options.TokenValidationParameters = new TokenValidationParameters() {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["API_SECRET"]))
+    };
 });
 
 var app = builder.Build();

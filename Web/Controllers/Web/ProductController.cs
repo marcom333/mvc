@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Web.Filters;
 using Web.ViewModel;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 // Product/
 [Route("Product")]
@@ -102,6 +102,7 @@ public class ProductController : Controller {
 
     [HttpPost("Delete/{id}")]
     public async Task<IActionResult> Delete(int id) {
+        Console.WriteLine(id);
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         await _productService.DeleteProduct(p);

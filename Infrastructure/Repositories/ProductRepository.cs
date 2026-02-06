@@ -50,34 +50,23 @@ public class ProductRepository : IProductRepository{
                 p.ProductId,
                 p.Name, 
                 p.Price, 
-                p.Description,
-
-                c.CategoyId as CategoryId, 
-                c.Name,
-                c.Description,
-
-                u.UserId,
-                u.Name,
-                u.Email
+                p.Description
 
             FROM dbo.Product p
-            LEFT JOIN dbo.Category c ON
-                c.CategoyId = p.CategoryId
-            LEFT JOIN dbo.Users u ON
-                u.UserId = P.UserId
+
             WHERE ProductId = @productId";
-        return (await con.QueryAsync<Product, Category, User, Product>(sql, 
-            (p, c, u) => {
-                p.CategoryId = c.CategoryId;
-                p.UserId = u.UserId;
-                p.Category = c;
-                p.User = u;
-                return p;
-            }, 
-            splitOn: "CategoryId,UserId",
-            param: new {productId=id}
-        )).First();
-        // return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
+        // return (await con.QueryAsync<Product, Category, User, Product>(sql, 
+        //     (p, c, u) => {
+        //         p.CategoryId = c.CategoryId;
+        //         p.UserId = u.UserId;
+        //         p.Category = c;
+        //         p.User = u;
+        //         return p;
+        //     }, 
+        //     splitOn: "CategoryId,UserId",
+        //     param: new {productId=id}
+        // )).First();
+        return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
     }
     public async Task DeleteProduct(Product p) {
         using IDbConnection con = _context.GetConnection();

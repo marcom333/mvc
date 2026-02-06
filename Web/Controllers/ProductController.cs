@@ -107,4 +107,11 @@ public class ProductController : Controller {
         await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
     }
+
+    [HttpGet("Index2")]
+    public async Task<IActionResult> IndexTwo([FromQuery] int page = 1, [FromQuery] string? name = null) {
+        PageResult<Product> model = await _productService.GetAllWithPage(page, 5, name);
+        ViewBag.Name = name;
+        return View(model);
+    }
 }

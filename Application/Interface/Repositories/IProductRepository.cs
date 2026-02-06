@@ -13,4 +13,6 @@ public interface IProductRepository {
     public Task<Product> CreateProduct(Product p);
 
     public Task UpdateProduct(Product p);
+
+    public Task<PageResult<Product>> GetAllWithPage(int page = 1, int pageSize = 10, string? name = null);
 }

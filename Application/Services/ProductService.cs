@@ -61,4 +61,8 @@ public class ProductService : IProductService {
     public async Task DeleteProduct(Product product) {
         await _productRepository.DeleteProduct(product);
     }
+
+    public async Task<PageResult<Product>> GetAllWithPage(int page = 1, int pageSize = 10, string? name = null) {
+        return await _productRepository.GetAllWithPage(page, pageSize, name);
+    }
 }

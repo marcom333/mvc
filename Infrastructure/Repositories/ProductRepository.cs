@@ -126,4 +126,42 @@ public class ProductRepository : IProductRepository{
         Console.WriteLine(count);
     }
 
+    public async Task<PageResult<Product>> GetAllWithPage(int page = 1, int pageSize = 10, string? name = null) {
+        using IDbConnection con = _context.GetConnection();
+        string sql = @"
+            SELECT 
+                ProductId, 
+                CategoryId, 
+                UserId, 
+                Price, 
+                Name, 
+                Description
+            FROM 
+                dbo.Product
+            WHERE 
+                (@name IS NULL OR Name LIKE '%'+@name+'%')
+            ORDER BY ProductId
+            OFFSET
+                (@page-1)*@pageSize ROWS FETCH NEXT
+                @pageSize ROWS ONLY
+        ";
+        IEnumerable<Product> products = await con.QueryAsync<Product>(sql, new {page, pageSize, name});
+
+        int total = await con.ExecuteScalarAsync<int>(@"
+            SELECT 
+                COUNT(ProductId) as total
+            FROM dbo.Product
+            WHERE 
+                (@name IS NULL OR Name LIKE '%'+@name+'%')
+        ", new {name});
+        
+        return new PageResult<Product>() {
+            Items = products.ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = total,
+            TotalPages = (int)Math.Ceiling((double)total/pageSize)
+        };
+    }
+
 }

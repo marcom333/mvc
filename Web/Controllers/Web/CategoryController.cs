@@ -4,7 +4,7 @@ using Application.Interface.Service;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 public class CategoryController : Controller
 {

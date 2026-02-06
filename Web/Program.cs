@@ -1,21 +1,35 @@
+using System.Text;
 using Application.Interface.Repositories;
 using Application.Interface.Service;
 using Application.Services;
+using DotNetEnv;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.IdentityModel.Tokens;
 using Web.Filters;
 using Web.Tools;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options => {
         var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-        options.Filters.Add(new AuthorizeFilter(policy));
+        // options.Filters.Add(new AuthorizeFilter(policy));
+        options.Conventions.Add(new AuthorizeControllerModelConvention("Web.Controllers.Web", policy));
+
+        var policyApi = new AuthorizationPolicyBuilder().
+            RequireAuthenticatedUser().
+            AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme).
+            Build();
+
+        options.Conventions.Add(new AuthorizeControllerModelConvention("Web.Controllers.Api", policyApi));
     });
 
 // builder.Services.AddTransient<IOutput, Output>(); // <== nuevo cada que se usa
@@ -37,14 +51,27 @@ builder.Services.AddSingleton<DapperContext>();
 
 builder.Services.AddTransient<IAuthorizationHandler, IsAdminHandler>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+var obj = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+obj.AddCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+});
+
+
+obj.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout";
-        options.ExpireTimeSpan = TimeSpan.FromHours(24);
-        options.SlidingExpiration = true;
-    });
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["API_SECRET"]?? ""))
+    };
+});
 
 builder.Services.AddAuthorization(options => {
     options.AddPolicy(IsAdminRequirement.PolicyName, policy => {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Filters;
 using Web.ViewModels;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 public class ProductController : Controller
 {

@@ -5,7 +5,7 @@ using Web.Filters;
 using Web.Models;
 using Web.Tools;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 [AllowAnonymous]
 public class HomeController : Controller

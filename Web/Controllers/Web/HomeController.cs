@@ -5,18 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Filters;
 using Web.Models;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly RecordSnapshotRepo _repo;
 
-    public HomeController(ILogger<HomeController> logger, RecordSnapshotRepo repo){
+    private readonly IConfiguration _config;
+
+    public HomeController(ILogger<HomeController> logger, RecordSnapshotRepo repo, IConfiguration configuration){
         Console.WriteLine("Constructor");
         Infrastructure.Class1 c = new Infrastructure.Class1();
         _logger = logger;
         _repo = repo;
+        _config = configuration;
     }
 
     public IActionResult Index(){
@@ -26,7 +29,7 @@ public class HomeController : Controller
     [ServiceFilter(typeof(ActionFilter))]
     [ServiceFilter(typeof(ResultFilter))]
     public IActionResult Privacy(){
-        Console.WriteLine("Action");
+        Console.WriteLine(_config["API_SECRET"]);
         return View();
     }
 

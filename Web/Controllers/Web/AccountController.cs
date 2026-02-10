@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Tools;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 public class AccountController: Controller {
 

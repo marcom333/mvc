@@ -2,7 +2,7 @@ using Application.Entities;
 using Application.Interface.Service;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 public class CategoryController : Controller {
 

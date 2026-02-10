@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Web.Filters;
 using Web.ViewModel;
 
-namespace Web.Controllers;
+namespace Web.Controllers.Web;
 
 // Product/
 [Route("Product")]
@@ -102,9 +102,17 @@ public class ProductController : Controller {
 
     [HttpPost("Delete/{id}")]
     public async Task<IActionResult> Delete(int id) {
+        Console.WriteLine(id);
         Product? p = await _productService.GetProduct(id);
         if(p == null) return NotFound();
         await _productService.DeleteProduct(p);
         return RedirectToAction("Index");
+    }
+
+    [HttpGet("Index2")]
+    public async Task<IActionResult> IndexTwo([FromQuery] int page = 1, [FromQuery] string? name = null) {
+        PageResult<Product> model = await _productService.GetAllWithPage(page, 5, name);
+        ViewBag.Name = name;
+        return View(model);
     }
 }

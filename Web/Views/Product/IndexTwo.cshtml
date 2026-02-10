@@ -6,7 +6,16 @@
 
 @using Application.Entities
 
-@model List<Product>
+@model PageResult<Product>
+
+<form action="" method="get">
+    <div class="form-group">
+        <label for="">Nombre</label>
+        <input type="text" class="form-control" name="name" value="@ViewBag.Name">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
 
 @if(ViewBag.Error!=null){
     <div class="alert alert-danger" role="alert">
@@ -31,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(Product p in Model){
+                @foreach(Product p in Model.Items){
                     <tr>
                         <td>@p.Name</td>
                         <td>@p.Price</td>
@@ -54,6 +63,20 @@
     </div>
 </div>
 
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item @(Model.Page>1?"":"disabled")"><a class="page-link" href="#" @(Model.Page>1?"":"aria-disabled=\"true\"")>Previous</a></li>
+
+    @for(int renderPage = 1; renderPage <= Model.TotalPages; renderPage++){
+        <li class="page-item"><a class="page-link" href="@Url.Action("Index2","Product")?page=@renderPage&name=@ViewBag.Name">@renderPage</a></li>
+    }
+    
+    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+  </ul>
+</nav>
+
+
 @section Scripts{
     <script>
         function detalle(id){
@@ -68,3 +91,4 @@
         }
     </script>
 }
+

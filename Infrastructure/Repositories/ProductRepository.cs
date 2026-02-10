@@ -50,34 +50,23 @@ public class ProductRepository : IProductRepository{
                 p.ProductId,
                 p.Name, 
                 p.Price, 
-                p.Description,
-
-                c.CategoryId, 
-                c.Name,
-                c.Description,
-
-                u.UserId,
-                u.Name,
-                u.Email
+                p.Description
 
             FROM dbo.Product p
-            LEFT JOIN dbo.Category c ON
-            c.CategoryId = p.CategoryId
-            LEFT JOIN dbo.Users u ON
-                u.UserId = P.UserId
+
             WHERE ProductId = @productId";
-        return (await con.QueryAsync<Product, Category, User, Product>(sql, 
-            (p, c, u) => {
-                p.CategoryId = c.CategoryId;
-                p.UserId = u.UserId;
-                p.Category = c;
-                p.User = u;
-                return p;
-            }, 
-            splitOn: "CategoryId,UserId",
-            param: new {productId=id}
-        )).First();
-        // return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
+        // return (await con.QueryAsync<Product, Category, User, Product>(sql, 
+        //     (p, c, u) => {
+        //         p.CategoryId = c.CategoryId;
+        //         p.UserId = u.UserId;
+        //         p.Category = c;
+        //         p.User = u;
+        //         return p;
+        //     }, 
+        //     splitOn: "CategoryId,UserId",
+        //     param: new {productId=id}
+        // )).First();
+        return (await con.QueryAsync<Product>(sql, new {productId=id})).FirstOrDefault();
     }
     public async Task DeleteProduct(Product p) {
         using IDbConnection con = _context.GetConnection();
@@ -124,6 +113,44 @@ public class ProductRepository : IProductRepository{
             WHERE ProductId = @ProductId";
         int count = await con.ExecuteAsync(sql, p);
         Console.WriteLine(count);
+    }
+
+    public async Task<PageResult<Product>> GetAllWithPage(int page = 1, int pageSize = 10, string? name = null) {
+        using IDbConnection con = _context.GetConnection();
+        string sql = @"
+            SELECT 
+                ProductId, 
+                CategoryId, 
+                UserId, 
+                Price, 
+                Name, 
+                Description
+            FROM 
+                dbo.Product
+            WHERE 
+                (@name IS NULL OR Name LIKE '%'+@name+'%')
+            ORDER BY ProductId
+            OFFSET
+                (@page-1)*@pageSize ROWS FETCH NEXT
+                @pageSize ROWS ONLY
+        ";
+        IEnumerable<Product> products = await con.QueryAsync<Product>(sql, new {page, pageSize, name});
+
+        int total = await con.ExecuteScalarAsync<int>(@"
+            SELECT 
+                COUNT(ProductId) as total
+            FROM dbo.Product
+            WHERE 
+                (@name IS NULL OR Name LIKE '%'+@name+'%')
+        ", new {name});
+        
+        return new PageResult<Product>() {
+            Items = products.ToList(),
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = total,
+            TotalPages = (int)Math.Ceiling((double)total/pageSize)
+        };
     }
 
 }
